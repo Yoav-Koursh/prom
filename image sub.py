@@ -3,12 +3,12 @@ import copy
 
 # Load the video file
 cap = cv2.VideoCapture("ball_rolling.mp4")
-frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
 # Check if the video opened correctly
 if not cap.isOpened():
     print("Error: Could not open video file.")
     exit()
+frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
 # Read and display video frames
 random_frame = 0

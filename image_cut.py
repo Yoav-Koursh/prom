@@ -19,39 +19,41 @@ cv2.waitKey(0)
 input()"""
 
 import cv2
+def image_cut(video_file, camera_fps, desired_fps):
+    # Load the video file
+    cap = cv2.VideoCapture(video_file)
 
-# Load the video file
-cap = cv2.VideoCapture("video.mp4")
+    # Check if the video opened correctly
+    if not cap.isOpened():
+        print("Error: Could not open video file.")
+        exit()
 
-# Check if the video opened correctly
-if not cap.isOpened():
-    print("Error: Could not open video file.")
-    exit()
+    cut_videos = [[],[],[],[],[]]
+    n = 0
+    # Read and display video frames
+    while True:
+        n += 1
+        if n % 20 == 0:
+            print(n)
+        ret, frame = cap.read()
+        if n%(camera_fps/desired_fps) != 0:
+            continue
+        if not ret:
+            break   # No more frames -> exit loop
 
-cut_videos = [[],[],[],[],[]]
-n = 0
-# Read and display video frames
-while True:
-    n += 1
-    if n % 20 == 0:
-        print(n)
-    ret, frame = cap.read()
+        # cv2.imshow("Video", frame)
 
-    if not ret:
-        break   # No more frames -> exit loop
+        H, W = frame.shape[:2]
+        cuts = []
+        cut_h, cut_w = H // 5, W // 5
+        for i in range(5):
+            cut_videos[i].append(frame[:, cut_w*i:cut_w*(i+1)])
 
-    # cv2.imshow("Video", frame)
+        # Press Q to quit
+        if cv2.waitKey(25) & 0xFF == ord('q'):
+            break
 
-    H, W = frame.shape[:2]
-    cuts = []
-    cut_h, cut_w = H // 5, W // 5
-    for i in range(5):
-        cut_videos[i].append(frame[:, cut_w*i:cut_w*(i+1)])
-
-    # Press Q to quit
-    if cv2.waitKey(25) & 0xFF == ord('q'):
-        break
-
-# Release resources
-cap.release()
-cv2.destroyAllWindows()
+    # Release resources
+    cap.release()
+    cv2.destroyAllWindows()
+    return cut_videos

@@ -1,22 +1,24 @@
 import numpy as np
 
 
-def find_object_locations(img):
-    object_locations = []
-
+def find_object_locations(img): #finds border with most pixels and returns its avg location
+    img_size = img.shape
+    object_location = (0,0)
+    most_pixels = 0
     while True:
         non_empty_pixels = np.transpose(np.nonzero(img))
         if non_empty_pixels.size ==0:
             break
         else:
             num_pixels , object_pixels = find_object_helper(img , non_empty_pixels[0],set() )
-            object_pixels_array = np.array([*object_pixels])
-            object_location = np.sum(object_pixels_array, axis = 0)/num_pixels
-            object_locations.append(list(object_location))
-
+            if num_pixels > most_pixels:
+                object_pixels_array = np.array([*object_pixels])
+                object_location = tuple(np.sum(object_pixels_array, axis = 0)/num_pixels)
+                most_pixels = num_pixels
             for index in object_pixels:
                 img[index]=0
-    return object_locations
+    object_location_vector = (object_location[0]-img_size[0]/2,object_location[1]-img_size[1]/2)
+    return (2*object_location_vector[0]/img_size[0], 2*object_location_vector[1]/img_size[1])
 
 
 def find_object_helper(img, pixel, visited_pixels):
@@ -33,11 +35,8 @@ def find_object_helper(img, pixel, visited_pixels):
 
             current_pixel = (row_index, column_index)
             if current_pixel not in visited_pixels and img[current_pixel[0],current_pixel[1]] == 1:
-                print(current_pixel)
-                print(img[current_pixel[0],current_pixel[1]])
                 new_count, visited_pixels = find_object_helper(img, current_pixel, visited_pixels)
                 counter += new_count
     return counter, visited_pixels
 
 
-print(find_object_locations(np.array([[1,1,1,0],[1,0,0,0],[1,0,0,1]])))

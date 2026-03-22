@@ -61,7 +61,7 @@ if img is None:
 else:
     # Example using Reinforced Camera - swap these variables to test other cameras
     new_img = cv2.undistort(img, reinforced_camera_matrix, reinforced_camera_distance)
-
+    cv2.imshow('distorted', img)
     cv2.imshow('Undistorted', new_img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()

@@ -8,7 +8,7 @@ def find_object_locations(img): #finds border with most pixels and returns its a
     most_pixels = 0
     while True:
         non_empty_pixels = np.transpose(np.nonzero(img))
-        if non_empty_pixels.size ==0:
+        if non_empty_pixels.size == 0:
             break
         else:
             num_pixels , object_pixels = find_object_helper(img , non_empty_pixels[0],set() )
@@ -19,13 +19,13 @@ def find_object_locations(img): #finds border with most pixels and returns its a
                 most_pixels = num_pixels
             for index in object_pixels:
                 img[index]=0
-    x = [-p[1] for p in object_pixels] # + [-1920 / 2, 1920 / 2, 1920 / 2, -1920 / 2]
-    y = [p[0] for p in object_pixels] # [1080 / 2, 1080 / 2, -1080 / 2, -1080 / 2]
-    print(num_pixels)
+    #x = [p[1] for p in object_pixels] # + [-1920 / 2, 1920 / 2, 1920 / 2, -1920 / 2]
+    #y = [-p[0] for p in object_pixels] # [1080 / 2, 1080 / 2, -1080 / 2, -1080 / 2]
+    #print(num_pixels)
     # cv2.imshow("sub", sub_img)
 
-    plt.plot(x, y, 'o')
-    plt.show()
+    #plt.plot(x, y, 'o')
+    #plt.show()
     object_location_vector = (object_location[0]-img_size[0]/2,object_location[1]-img_size[1]/2)
     return object_location_vector # (2*object_location_vector[0]/img_size[0], 2*object_location_vector[1]/img_size[1])
 
@@ -49,3 +49,4 @@ def find_object_helper(img, pixel, visited_pixels):
     return counter, visited_pixels
 
 
+#print(find_object_locations(np.array([[0,0,0,0], [0,0,0,0],[0,1,1,0],[0,1,0,0],[0,1,0,0]])))

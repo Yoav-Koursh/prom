@@ -48,8 +48,8 @@ xpoints = np.array([i[1] - (1920/2) for i in object_locations]+ [1920/2, 1920/2,
 ypoints = np.array([-i[0] + (540) for i in object_locations]+ [-1080/2, 1080/2, 1080/2, -1080/2])
 transpoded_object_location = object_locations # np.transpose(object_locations)
 print(f'\n\nlocations with zeros {[[float(j) for j in i] for i in transpoded_object_location]}')
-
-transpoded_object_location = np.array([np.array(p) for p in list(filter(lambda a: a != [0,0], object_locations))]) # np.delete(transpoded_object_location, np.array([0,0]))
+#print("\n\nfilter", list(filter(lambda a: a != [0,0], object_locations)))
+transpoded_object_location = np.array([np.array(p) for p in list(filter(lambda a: a != (0,0), object_locations))]) # np.delete(transpoded_object_location, np.array([0,0]))
 # vprint(f'\n\nlocations with no zeros {[float(i) for i in transpoded_object_location]}')
 
 transposed_smooth_object_location = (moving_avg.moving_avg(transpoded_object_location[0],3),moving_avg.moving_avg(transpoded_object_location[1],3))

@@ -1,7 +1,8 @@
 import cv2
+import sys
 import numpy as np
 from matplotlib import pyplot as plt
-
+sys.setrecursionlimit(10000)
 
 def find_object_locations(img): #finds border with most pixels and returns its avg location
     img_size = img.shape
@@ -29,20 +30,26 @@ def find_object_locations(img): #finds border with most pixels and returns its a
 
 def find_object_helper(img, pixel, visited_pixels):
     counter = 1
+    r=4
+    R=6
     visited_pixels.add((pixel[0], pixel[1]))
 
-    for row_index in range(pixel[0]-5,pixel[0]+6):
+    for row_index in range(pixel[0]-R,pixel[0]+1+R):
         if row_index < 0 or row_index > img.shape[0] - 1:
             continue
 
-        for column_index in range(pixel[1] - 5,pixel[1] + 6):
+        for column_index in range(pixel[1] - R,pixel[1] + 1 + R):
             if column_index < 0 or column_index > img.shape[1]-1:
                 continue
 
             current_pixel = (row_index, column_index)
             if current_pixel not in visited_pixels and img[current_pixel[0],current_pixel[1]] == 1:
-                new_count, visited_pixels = find_object_helper(img, current_pixel, visited_pixels)
-                counter += new_count
+                if column_index < pixel[1] + r and  column_index > pixel[1] - r and row_index < pixel[0] + r and row_index > pixel[0] - r:
+                    counter += 1
+                    visited_pixels.add((row_index, column_index))
+                else:
+                    new_count, visited_pixels = find_object_helper(img, current_pixel, visited_pixels)
+                    counter += new_count
     return counter, visited_pixels
 
 

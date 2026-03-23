@@ -1,12 +1,14 @@
 
 import cv2
 import numpy as np
+from matplotlib.pyplot import imshow
+
 import border_grouping
 import image_distort
 import matplotlib.pyplot as plt
 
 
-def find_edges(img):
+def find_edges(img,n=0):
     # Convert to graycsale
     img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
@@ -21,8 +23,10 @@ def find_edges(img):
 
     # Canny Edge Detection
     edges = cv2.Canny(image=img_blur, threshold1=100, threshold2=200)  # Canny Edge Detection
-    #cv2.imshow('edges', edges)
+    if n == '40':
+        cv2.imshow(n, edges)
     edges_arr = np.array(edges)
+
     edges_arr = edges_arr // 255
 
     return edges_arr
@@ -41,7 +45,6 @@ def image_to_vector(cap, camera_index):
         if n % 5 != 0:
             n += 1
             continue
-        print("n", n)
         if n >= len(cap):
             break
         frame1 = cap[n]
@@ -49,9 +52,10 @@ def image_to_vector(cap, camera_index):
         img1 = image_distort.correct_image(frame1, camera_index) #fix image distortion
 
         current_subtracted_frame = cv2.subtract(img1, img2)
-
-        edges_arr = find_edges(current_subtracted_frame)
-
+        # cv2.imshow(str(n), current_subtracted_frame)
+        if n == 40:
+            cv2.imshow('aaa', current_subtracted_frame)
+        edges_arr = find_edges(current_subtracted_frame,str(n))
         object_locations.append(border_grouping.find_object_locations(edges_arr))
 
 

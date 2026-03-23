@@ -1,3 +1,4 @@
+import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -12,27 +13,23 @@ def find_object_locations(img): #finds border with most pixels and returns its a
             break
         else:
             num_pixels , object_pixels = find_object_helper(img , non_empty_pixels[0],set() )
-
             if num_pixels > most_pixels:
-                object_pixels_array = np.array([*object_pixels])
-                object_location = tuple(np.sum(object_pixels_array, axis = 0)/num_pixels)
+                object_pixels_array = np.array([*object_pixels])+0.5
+                temp= np.sum(object_pixels_array, axis = 0)
+                object_location = tuple( temp/num_pixels)
                 most_pixels = num_pixels
+                x = [p[1] for p in object_pixels]  # + [-1920 / 2, 1920 / 2, 1920 / 2, -1920 / 2]
+                y = [p[0] for p in object_pixels]  # [1080 / 2, 1080 / 2, -1080 / 2, -1080 / 2]
+
             for index in object_pixels:
                 img[index]=0
-    #x = [p[1] for p in object_pixels] # + [-1920 / 2, 1920 / 2, 1920 / 2, -1920 / 2]
-    #y = [-p[0] for p in object_pixels] # [1080 / 2, 1080 / 2, -1080 / 2, -1080 / 2]
-    #print(num_pixels)
-    # cv2.imshow("sub", sub_img)
-
-    #plt.plot(x, y, 'o')
-    #plt.show()
-    object_location_vector = (object_location[0]-img_size[0]/2,object_location[1]-img_size[1]/2)
+    object_location_vector = (object_location[0],object_location[1])
     return object_location_vector # (2*object_location_vector[0]/img_size[0], 2*object_location_vector[1]/img_size[1])
 
 
 def find_object_helper(img, pixel, visited_pixels):
     counter = 1
-    visited_pixels.add(tuple(pixel))
+    visited_pixels.add((pixel[0], pixel[1]))
 
     for row_index in range(pixel[0]-5,pixel[0]+6):
         if row_index < 0 or row_index > img.shape[0] - 1:
@@ -49,4 +46,3 @@ def find_object_helper(img, pixel, visited_pixels):
     return counter, visited_pixels
 
 
-#print(find_object_locations(np.array([[0,0,0,0], [0,0,0,0],[0,1,1,0],[0,1,0,0],[0,1,0,0]])))

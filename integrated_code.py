@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import image_cut
+import moving_avg
 import video_to_vector
 import math
 import matplotlib.pyplot as plt
@@ -25,7 +26,7 @@ camera_locations = [
     np.array((R * math.cos(1.3 * math.pi), R * math.sin(1.3 * math.pi), 0)),
 ]
 # videos = image_cut.image_cut('video.mp4', 30, 5)
-cap = cv2.VideoCapture("ball_rolling.mp4")
+cap = cv2.VideoCapture("testvid.mp4")
 video = []
 n = 0
 while True:
@@ -36,17 +37,25 @@ while True:
     if n % 100 == 0:
         print(n)
     video.append(frame)
-print("aaaaaa")
 object_locations = video_to_vector.image_to_vector(video, 0)
 #for i in range(5):
 #    object_locations.append(video_to_vector.image_to_vector(videos[i], i))
 #object_locations_np = np.array(object_locations)
 #directional_vectors = object_locations_np * np.tan(camera_angles)
-print("\n\nobject_locations\n", object_locations)
 #print("\n\ndirectional_vectors\n", directional_vectors)
 
-xpoints = np.array([i[0] for i in object_locations])
-ypoints = np.array([i[1] for i in object_locations])
+xpoints = np.array([i[1] - (1920/2) for i in object_locations]+ [1920/2, 1920/2, -1920/2, -1920/2])
+ypoints = np.array([-i[0] + (540) for i in object_locations]+ [-1080/2, 1080/2, 1080/2, -1080/2])
 
-plt.plot(xpoints, ypoints, 'o')
+transpoded_object_location = np.transpose(object_locations)
+transposed_smooth_object_location = (moving_avg.moving_avg(transpoded_object_location[0],5),moving_avg.moving_avg(transpoded_object_location[1],5))
+smooth_object_location = np.transpose(transposed_smooth_object_location)
+plt.plot( xpoints, ypoints, 'o')
+print(object_locations)
+print(smooth_object_location)
+xavgpoints = np.array([i[1] - (1920/2) for i in smooth_object_location]+ [1920/2, 1920/2, -1920/2, -1920/2])
+yavgpoints = np.array([-i[0] + (540) for i in smooth_object_location]+ [-1080/2, 1080/2, 1080/2, -1080/2])
+plt.plot( xavgpoints, yavgpoints, 'o')
+
 plt.show()
+cv2.waitKey(0)

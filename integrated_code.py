@@ -48,5 +48,5 @@ print("\n\nobject_locations\n", object_locations)
 xpoints = np.array([i[0] for i in object_locations])
 ypoints = np.array([i[1] for i in object_locations])
 
-plt.plot(xpoints, ypoints)
+plt.plot(xpoints, ypoints, 'o')
 plt.show()

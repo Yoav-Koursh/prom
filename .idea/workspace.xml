@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28f5fcae-b4a6-470e-b6d3-b046dc8431fe" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/integrated_code.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/video_to_vector.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/border_grouping.py" beforeDir="false" afterPath="$PROJECT_DIR$/border_grouping.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image sub.py" beforeDir="false" afterPath="$PROJECT_DIR$/image sub.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image_cut.py" beforeDir="false" afterPath="$PROJECT_DIR$/image_cut.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image_distort.py" beforeDir="false" afterPath="$PROJECT_DIR$/image_distort.py" afterDir="false" />
-    </list>
+    <list default="true" id="28f5fcae-b4a6-470e-b6d3-b046dc8431fe" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -68,7 +60,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1773941940185</updated>
-      <workItem from="1773941941226" duration="23246000" />
+      <workItem from="1773941941226" duration="25287000" />
     </task>
     <servers />
   </component>

@@ -2,8 +2,7 @@
 # Posted by manaclan, modified by community. See post 'Timeline' for change history
 # Retrieved 2026-03-21, License - CC BY-SA 4.0
 
-import cv2
-import numpy as np
+
 
 """img = cv2.imread('imtest1.JPG')
 H,W = img.shape[:2]
@@ -33,8 +32,8 @@ def image_cut(video_file, camera_fps, desired_fps):
     # Read and display video frames
     while True:
         n += 1
-        if n % 20 == 0:
-            print(n)
+        #if n % 20 == 0:
+        #    print(n)
         ret, frame = cap.read()
         if n%(camera_fps/desired_fps) != 0:
             continue
@@ -48,10 +47,6 @@ def image_cut(video_file, camera_fps, desired_fps):
         cut_h, cut_w = H // 5, W // 5
         for i in range(5):
             cut_videos[i].append(frame[:, cut_w*i:cut_w*(i+1)])
-
-        # Press Q to quit
-        if cv2.waitKey(25) & 0xFF == ord('q'):
-            break
 
     # Release resources
     cap.release()

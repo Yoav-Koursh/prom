@@ -10,11 +10,15 @@ import matplotlib.pyplot as plt
 
 def find_edges(img,n=0):
     # Convert to graycsale
-    img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
+    # img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    img_gray = img
     # Blur the image for better edge detection
-    img_blur = cv2.GaussianBlur(img_gray, (3, 3), 0)
-
+    # img_blur = cv2.GaussianBlur(img_gray, (1, 1), 0)
+    thresh = 50
+    img_blur = cv2.threshold(img_gray, thresh, 255, cv2.THRESH_BINARY)[1]
+    if n=='40':
+        cv2.imshow('bw', img_blur)
+        cv2.waitKey()
     # Sobel Edge Detection
     sobelx = cv2.Sobel(src=img_blur, ddepth=cv2.CV_64F, dx=1, dy=0, ksize=5)  # Sobel Edge Detection on the X axis
     sobely = cv2.Sobel(src=img_blur, ddepth=cv2.CV_64F, dx=0, dy=1, ksize=5)  # Sobel Edge Detection on the Y axis
@@ -52,10 +56,11 @@ def image_to_vector(cap, camera_index):
         img1 = image_distort.correct_image(frame1, camera_index) #fix image distortion
 
         current_subtracted_frame = cv2.subtract(img1, img2)
+        b, g, r = cv2.split(current_subtracted_frame)
         # cv2.imshow(str(n), current_subtracted_frame)
         if n == 40:
-            cv2.imshow('aaa', current_subtracted_frame)
-        edges_arr = find_edges(current_subtracted_frame,str(n))
+            cv2.imshow('aaa', r)
+        edges_arr = find_edges(r,str(n))
         object_locations.append(border_grouping.find_object_locations(edges_arr))
 
 

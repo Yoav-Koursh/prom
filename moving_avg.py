@@ -1,12 +1,7 @@
 import numpy as np
 
-
 def moving_avg(data, R):
-    new_data=np.array([sum(data[:2*R+1])])
-    for i in range ( R+1, len(data)-R):
-        new_data = np.append(new_data, [new_data[-1]-data[i-2*R+1]+data[i+2]])
-    return new_data/ (2*R+1)
-
-
-
-
+    window_size = 2*R+1
+    weights = np.ones(window_size)/window_size
+    sma = np.convolve(data, weights, mode = 'valid')
+    return sma

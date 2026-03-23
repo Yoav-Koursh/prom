@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 
 R = 0.3 # distance from middle to each camera in meters
-camera_angles = np.array([[math.pi * 95 /180, math.pi * 95 /180, math.pi * 95 /180, math.pi * 95 /180, math.pi * 95 /180]])
+camera_angles = np.array([(1,1.9 )])
 camera_locations = [
     # Camera 1 (top)
     np.array((0, R, 0)),
@@ -45,22 +45,23 @@ object_locations = video_to_vector.image_to_vector(video, 0)
 #print("\n\ndirectional_vectors\n", directional_vectors)
 
 xpoints = np.array([i[1] - (1920/2) for i in object_locations]+ [1920/2, 1920/2, -1920/2, -1920/2])
+
 ypoints = np.array([-i[0] + (540) for i in object_locations]+ [-1080/2, 1080/2, 1080/2, -1080/2])
-transpoded_object_location = object_locations # np.transpose(object_locations)
-print(f'\n\nlocations with zeros {[[float(j) for j in i] for i in transpoded_object_location]}')
-#print("\n\nfilter", list(filter(lambda a: a != [0,0], object_locations)))
-transpoded_object_location = np.array([np.array(p) for p in list(filter(lambda a: a != (0,0), object_locations))]) # np.delete(transpoded_object_location, np.array([0,0]))
-# vprint(f'\n\nlocations with no zeros {[float(i) for i in transpoded_object_location]}')
+
+
+object_locations = np.array([np.array(p) for p in list(filter(lambda a: a != (0,0), object_locations))]) # np.delete(transpoded_object_location, np.array([0,0]))
+
+transpoded_object_location = np.transpose(object_locations)
 
 transposed_smooth_object_location = (moving_avg.moving_avg(transpoded_object_location[0],3),moving_avg.moving_avg(transpoded_object_location[1],3))
 smooth_object_location = np.transpose(transposed_smooth_object_location)
+smooth_object_location = (smooth_object_location - np.array([540, 1920/2 ]))*np.array([-1,1])
+direction_vector = smooth_object_location * 2 / np.array ([540, 1920/2]) * np.tan(camera_angles[0]/2)
+direction_vector_3d = np.array([[vector[1], vector[0],1 ]for vector in direction_vector])
+print (direction_vector_3d)
 plt.plot( xpoints, ypoints, 'o')
-print("\n\ntranspoded_object_location\n", transpoded_object_location)
-print("\n\nlen object_locations\n", len(object_locations))
-print("\n\nobject_locations\n", len(smooth_object_location))
-print(smooth_object_location)
-xavgpoints = np.array([i[1] - (1920/2) for i in smooth_object_location]+ [1920/2, 1920/2, -1920/2, -1920/2])
-yavgpoints = np.array([-i[0] + (540) for i in smooth_object_location]+ [-1080/2, 1080/2, 1080/2, -1080/2])
+xavgpoints = np.array([i[1]  for i in smooth_object_location]+ [1920/2, 1920/2, -1920/2, -1920/2])
+yavgpoints = np.array([i[0] for i in smooth_object_location]+ [-1080/2, 1080/2, 1080/2, -1080/2])
 plt.plot( xavgpoints, yavgpoints, 'o')
 
 plt.show()

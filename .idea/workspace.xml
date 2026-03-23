@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="28f5fcae-b4a6-470e-b6d3-b046dc8431fe" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/dis_loss_func.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/integrated_code.py" beforeDir="false" afterPath="$PROJECT_DIR$/integrated_code.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/moving_avg.py" beforeDir="false" afterPath="$PROJECT_DIR$/moving_avg.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/video_to_vector.py" beforeDir="false" afterPath="$PROJECT_DIR$/video_to_vector.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,6 +39,7 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "Python.2photostest.executor": "Run",
     "Python.border_grouping.executor": "Run",
+    "Python.dis_loss_func.executor": "Run",
     "Python.integrated_code.executor": "Run",
     "Python.moving_avg.executor": "Run",
     "Python.video_to_vector.executor": "Run",

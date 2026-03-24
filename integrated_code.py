@@ -32,7 +32,7 @@ camera_angles = np.array([(1,1.9 ),(0.7549, 1.2042 ), (0.7242,1.3676), (0.7927, 
 camera_locations = [np.array([0.625,0,0]),np.array([0,0,0]),np.array([-0.68,0,0])]
 
 # cap = cv2.VideoCapture("easytestvid.mp4")
-videos = image_cut.image_cut('fulltest2.mp4', 30, 10)
+videos = image_cut.image_cut('fulltest2.mp4', 30, 5)
 direction_vectors = []
 # for i in range(5):
 #     direction_vectors.append(video_to_vector.find_direction_from_vid(videos[i], i))
@@ -40,12 +40,19 @@ direction_vectors = []
 direction_vectors.append(video_to_vector.find_direction_from_vid(videos[0], 2))
 direction_vectors.append(video_to_vector.find_direction_from_vid(videos[2], 3))
 direction_vectors.append(video_to_vector.find_direction_from_vid(videos[1], 0))
+
+# for i in range (3):
+#     print(i)
+#     ypoints = np.append(direction_vectors[i][1], [1920 / 2, 1920 / 2, -1920 / 2, -1920 / 2])
+#     xpoints = np.append(direction_vectors[i][0], [1080 / 2, 1080 / 2, -1080 / 2, -1080 / 2])
+#     print(ypoints)
+#     print(xpoints)
+#     plt.plot(xpoints, ypoints)
+# plt.show()
+#
+
 # plt.show()
 locations = []
 for i in range(len(direction_vectors[0])):
     locations.append(calc_point.find_closest(camera_locations, np.array([direction_vectors[j][i] for j in range(3)])))
-print(locations)
 
-
-plt.show()
-cv2.waitKey(0)

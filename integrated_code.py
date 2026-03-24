@@ -32,7 +32,7 @@ camera_angles = np.array([(1,1.9 ),(0.7549, 1.2042 ), (0.7242,1.3676), (0.7927, 
 camera_locations = [np.array([0.625,0,0]),np.array([0,0,0]),np.array([-0.68,0,0])]
 
 # cap = cv2.VideoCapture("easytestvid.mp4")
-videos = image_cut.image_cut('fulltest2.mp4', 30, 5)
+videos = image_cut.image_cut('fulltest2.mp4', 30, 15)
 direction_vectors = []
 # for i in range(5):
 #     direction_vectors.append(video_to_vector.find_direction_from_vid(videos[i], i))

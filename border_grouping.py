@@ -14,7 +14,7 @@ def find_object_locations(img): #finds border with most pixels and returns its a
             break
         else:
             num_pixels , object_pixels = find_object_helper(img , non_empty_pixels[0],set() )
-            if num_pixels > most_pixels:
+            if num_pixels > most_pixels and num_pixels > 10:
                 object_pixels_array = np.array([*object_pixels])+0.5
                 temp= np.sum(object_pixels_array, axis = 0)
                 object_location = tuple( temp/num_pixels)

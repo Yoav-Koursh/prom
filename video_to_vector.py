@@ -25,7 +25,7 @@ def find_edges(img,n=0):
     # Canny Edge Detection
     edges = cv2.Canny(image=img_blur, threshold1=100, threshold2=200)  # Canny Edge Detection
     edges_arr = np.array(edges)
-    # cv2.imshow(n, edges_arr)
+    cv2.imshow(f'{n} border real', edges_arr)
     edges_arr = edges_arr // 255
 
     return edges_arr
@@ -55,7 +55,7 @@ def image_to_vector(cap, camera_index):
         frame_name = f' camera {camera_index} frame {n}'
         cv2.imshow(frame_name, current_subtracted_frame)
         b, g, r = cv2.split(current_subtracted_frame)
-        # cv2.imshow( str(n),b)
+        cv2.imshow( str(n),b)
         # cv2.imshow(str(n), current_subtracted_frame)
         edges_arr = find_edges(b,str(n))
         cv2.imshow( str(n)+'border',edges_arr)

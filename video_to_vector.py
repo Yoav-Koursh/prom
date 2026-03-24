@@ -14,14 +14,13 @@ camera_angles = np.array([(1,1.9 ),(0.7549, 1.2042 ), (0.7242,1.3676), (0.7927, 
 
 
 def find_edges(img,n=0):
-    thresh = 50
+    thresh = 30
     img_blur = cv2.threshold(img, thresh, 255, cv2.THRESH_BINARY)[1]
     # cv2.imshow(n, img_blur)
-    # cv2.imshow(n, img_blur)
     # Sobel Edge Detection
-    # sobelx = cv2.Sobel(src=img_blur, ddepth=cv2.CV_64F, dx=1, dy=0, ksize=5)  # Sobel Edge Detection on the X axis
-    # sobely = cv2.Sobel(src=img_blur, ddepth=cv2.CV_64F, dx=0, dy=1, ksize=5)  # Sobel Edge Detection on the Y axis
-    # sobelxy = cv2.Sobel(src=img_blur, ddepth=cv2.CV_64F, dx=1, dy=1,ksize=5)  # Combined X and Y Sobel Edge Detection
+    sobelx = cv2.Sobel(src=img_blur, ddepth=cv2.CV_64F, dx=1, dy=0, ksize=5)  # Sobel Edge Detection on the X axis
+    sobely = cv2.Sobel(src=img_blur, ddepth=cv2.CV_64F, dx=0, dy=1, ksize=5)  # Sobel Edge Detection on the Y axis
+    sobelxy = cv2.Sobel(src=img_blur, ddepth=cv2.CV_64F, dx=1, dy=1,ksize=5)  # Combined X and Y Sobel Edge Detection
 
     # Canny Edge Detection
     edges = cv2.Canny(image=img_blur, threshold1=100, threshold2=200)  # Canny Edge Detection
@@ -59,14 +58,15 @@ def image_to_vector(cap, camera_index):
         # cv2.imshow( str(n),b)
         # cv2.imshow(str(n), current_subtracted_frame)
         edges_arr = find_edges(b,str(n))
-        # cv2.imshow( str(n)+'border',edges_arr)
+        cv2.imshow( str(n)+'border',edges_arr)
 
         object_locations.append(border_grouping.find_object_locations(edges_arr))
         img2 = img1
         n += 1
     # Release resources
     # cap.release()
-    # cv2.destroyAllWindows()
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
     return object_locations
 
 """sub_img = cv2.subtract(cv2.imread("imtest1.jpg"), cv2.imread("imtest2.jpg"))
@@ -93,15 +93,20 @@ def find_direction_from_vid(video, camera_index):
     #     #     print(n)
     #     video.append(frame)
     object_locations = image_to_vector(video, camera_index)
-    object_locations = np.array([np.array(p) for p in list(
-        filter(lambda a: a != (0, 0), object_locations))])  # np.delete(transpoded_object_location, np.array([0,0]))
-    transpoded_object_location = np.transpose(object_locations)
-    transposed_smooth_object_location = (moving_avg.moving_avg(transpoded_object_location[0], 3), moving_avg.moving_avg(transpoded_object_location[1], 3))
-    smooth_object_location = np.transpose(transposed_smooth_object_location)
-    smooth_object_location = (smooth_object_location - np.array([540, 1920 / 2])) * np.array([-1, 1])
+    object_locations_map = np.array([ 1 if a != (0,0) else 0 for a in list(object_locations)])
+    # transpoded_object_location = np.transpose(object_locations)
+    # transposed_smooth_object_location = (moving_avg.moving_avg(transpoded_object_location[0], 3), moving_avg.moving_avg(transpoded_object_location[1], 3))
+    # smooth_object_location = np.transpose(transposed_smooth_object_location)
+
+    smooth_object_location = (object_locations - np.array([540, 1920 / 2])) * np.array([-1, 1])
     direction_vector = smooth_object_location * 2 / np.array([540, 1920 / 2]) * np.tan(camera_angles[camera_index] / 2)
     # plt.plot(direction_vector[1], direction_vector[0], 'o')
     direction_vector_3d = np.array([[vector[1], vector[0], 1] for vector in direction_vector])
+    ypoints = np.append(smooth_object_location[1], [1920 / 2, 1920 / 2, -1920 / 2, -1920 / 2])
+    xpoints = np.append(smooth_object_location[0], [1080 / 2, 1080 / 2, -1080 / 2, -1080 / 2])
+    plt.plot(xpoints, ypoints, 'o')
+    plt.show()
+    direction_vector_3d = np.array([direction_vector_3d[i] if object_locations_map[i] else np.array((-100000,-100000,-100000))for i in range (len(object_locations_map))])
     return direction_vector_3d
 
     # viewing the data
@@ -112,6 +117,7 @@ def find_direction_from_vid(video, camera_index):
 
     xavgpoints = np.array([i[1] for i in smooth_object_location] + [1920 / 2, 1920 / 2, -1920 / 2, -1920 / 2])
     yavgpoints = np.array([i[0] for i in smooth_object_location] + [-1080 / 2, 1080 / 2, 1080 / 2, -1080 / 2])
+    plt.plot(xpoints, ypoints)
     plt.plot(xavgpoints, yavgpoints, 'o')
 
 # vid =cv2.VideoCapture('testvid3.mp4')

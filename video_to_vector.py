@@ -17,7 +17,6 @@ def find_edges(img,n=0):
     thresh = 50
     img_blur = cv2.threshold(img, thresh, 255, cv2.THRESH_BINARY)[1]
     # cv2.imshow(n, img_blur)
-    # cv2.imshow(n, img_blur)
     # Sobel Edge Detection
     # sobelx = cv2.Sobel(src=img_blur, ddepth=cv2.CV_64F, dx=1, dy=0, ksize=5)  # Sobel Edge Detection on the X axis
     # sobely = cv2.Sobel(src=img_blur, ddepth=cv2.CV_64F, dx=0, dy=1, ksize=5)  # Sobel Edge Detection on the Y axis
@@ -93,15 +92,17 @@ def find_direction_from_vid(video, camera_index):
     #     #     print(n)
     #     video.append(frame)
     object_locations = image_to_vector(video, camera_index)
-    object_locations = np.array([np.array(p) for p in list(
-        filter(lambda a: a != (0, 0), object_locations))])  # np.delete(transpoded_object_location, np.array([0,0]))
-    transpoded_object_location = np.transpose(object_locations)
-    transposed_smooth_object_location = (moving_avg.moving_avg(transpoded_object_location[0], 3), moving_avg.moving_avg(transpoded_object_location[1], 3))
-    smooth_object_location = np.transpose(transposed_smooth_object_location)
-    smooth_object_location = (smooth_object_location - np.array([540, 1920 / 2])) * np.array([-1, 1])
+    object_locations_map = np.array([ 1 if a != (0,0) else 0 for a in list(object_locations)])
+    # transpoded_object_location = np.transpose(object_locations)
+    # transposed_smooth_object_location = (moving_avg.moving_avg(transpoded_object_location[0], 3), moving_avg.moving_avg(transpoded_object_location[1], 3))
+    # smooth_object_location = np.transpose(transposed_smooth_object_location)
+
+    smooth_object_location = (object_locations - np.array([540, 1920 / 2])) * np.array([-1, 1])
     direction_vector = smooth_object_location * 2 / np.array([540, 1920 / 2]) * np.tan(camera_angles[camera_index] / 2)
     # plt.plot(direction_vector[1], direction_vector[0], 'o')
     direction_vector_3d = np.array([[vector[1], vector[0], 1] for vector in direction_vector])
+    direction_vector_3d = np.array([direction_vector_3d[i] if object_locations_map[i] else np.array((-100000,-100000,-100000))for i in range (len(object_locations_map))])
+    print(f'direction_vector_3d fixed {direction_vector_3d}')
     return direction_vector_3d
 
     # viewing the data

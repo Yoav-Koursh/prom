@@ -2,7 +2,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def find_closest(O, D):
-    D = [D[i] / np.sum(D[i]*D[i])**0.5 for i in range(len(D))]
+    D_improved = []
+    non_recognized_vector = np.array((-100000.0,-100000.0,-100000.0))
+    for i in range (len(D)): #check if code found object in the frame
+        if not np.array_equal(D[i], non_recognized_vector):
+            D_improved.append(D[i])
+    if len(D_improved)<2: #need at least 2 vecs to find aprx location
+        return np.array([-100000,-100000,-100000])
+    D = [D_improved[i] / np.sum(D_improved[i]*D_improved[i])**0.5 for i in range(len(D_improved))]
     A = sum(np.array([np.identity(3) - np.array([D[i]]) * np.array([D[i]]).T for i in range(len(D))]))
     b = sum(np.array([np.matmul((np.identity(3) - np.array([D[i]]) * np.array([D[i]]).T), np.array([O[i]]).T) for i in range(len(D))]))
     #print(np.array([D[0]]) * np.array([D[0]]).T)

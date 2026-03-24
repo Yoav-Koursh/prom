@@ -40,12 +40,11 @@ direction_vectors = []
 direction_vectors.append(video_to_vector.find_direction_from_vid(videos[0], 2))
 direction_vectors.append(video_to_vector.find_direction_from_vid(videos[2], 3))
 direction_vectors.append(video_to_vector.find_direction_from_vid(videos[1], 0))
-print(direction_vectors)
 # plt.show()
-# locations = []
-# for i in range(len(direction_vectors[0])):
-#     locations.append(calc_point.find_closest(camera_locations, np.array([direction_vectors[j][i] for j in range(3)])))
-# print(locations)
+locations = []
+for i in range(len(direction_vectors[0])):
+    locations.append(calc_point.find_closest(camera_locations, np.array([direction_vectors[j][i] for j in range(3)])))
+print(locations)
 
 
 plt.show()

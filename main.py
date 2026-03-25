@@ -34,45 +34,30 @@ if __name__ == '__main__':
     #
     camera_locations = [np.array([0.625,0,0]),np.array([0,0,0]),np.array([-0.68,0,0])]
 
-    # cap = cv2.VideoCapture("easytestvid.mp4")
-    videos = image_cut.image_cut('fulltest2.mp4', 35, 15)
+    videos = image_cut.image_cut('fulltest1.mp4', 30, 15)
     print(len(videos[0]))
     direction_vectors = []
+
     # for i in range(5):
     #     direction_vectors.append(video_to_vector.find_direction_from_vid(videos[i], i))
 
-    direction_vectors.append(video_to_vector.find_direction_from_vid(videos[0], 2))
+    # direction_vectors.append(video_to_vector.find_direction_from_vid(videos[0], 2))
     direction_vectors.append(video_to_vector.find_direction_from_vid(videos[2], 3))
     direction_vectors.append(video_to_vector.find_direction_from_vid(videos[1], 0))
-
-    # for i in range (3):
-    #     print(i)
-    #     ypoints = np.append(direction_vectors[i][1], [1920 / 2, 1920 / 2, -1920 / 2, -1920 / 2])
-    #     xpoints = np.append(direction_vectors[i][0], [1080 / 2, 1080 / 2, -1080 / 2, -1080 / 2])
-    #     print(ypoints)
-    #     print(xpoints)
-    #     plt.plot(xpoints, ypoints)
-    # plt.show()
-    #
 
     # plt.show()
     locations = []
     for i in range(len(direction_vectors[0])):
-        locations.append(calc_point.find_closest(camera_locations, np.array([direction_vectors[j][i] for j in range(3)])))
+        locations.append(calc_point.find_closest(camera_locations, np.array([direction_vectors[j][i] for j in range(len(direction_vectors))])))
     locations  = list(filter(lambda v:  not np.all(np.equal(np.array([-100000,-100000,-100000]), v)), locations))
     x_locations = [locations[i][0,0] for i in range (len(locations))]
-    y_locations = [locations[i][0,1] for i in range (len(locations))]
+    y_locations = [-locations[i][0,1] for i in range (len(locations))]
     z_locations = [locations[i][0,2] for i in range (len(locations))]
-    %matplotlib widget
 
-    fig = plt.figure()
-    ax = Axes3D(fig)
-    plot_geeks = ax.scatter(x_locations, y_locations, z_locations)
+    print([(float(x_locations[i]), float(y_locations[i]), float(z_locations[i])) for i in range(len(locations[2:50]))])
+    plt.plot(x_locations, y_locations, 'o')
     plt.show()
-    print([list([locations[i][0][0]]) for i in range(len(locations))])
-    # plt.plot(x_locations, y_locations,  'o')
-    # plt.show()
-    # plt.plot (z_locations, 'o')
-    # plt.show()
+    plt.plot (z_locations, 'o')
+    plt.show()
 
 

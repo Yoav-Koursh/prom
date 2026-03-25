@@ -39,7 +39,7 @@ def image_cut(video_file, camera_fps, desired_fps):
         if not ret:
             break   # No more frames -> exit loop
 
-        if n % (camera_fps // desired_fps) != 0 or n < 15 or n > 80:
+        if n % (camera_fps // desired_fps) != 0 or n < 45 or n > 90:
             continue
         # cv2.imshow("Video", frame)
 

@@ -1,5 +1,8 @@
+from itertools import zip_longest
+
 import cv2
 import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
 
 import calc_point
 import image_cut
@@ -56,4 +59,20 @@ if __name__ == '__main__':
     locations = []
     for i in range(len(direction_vectors[0])):
         locations.append(calc_point.find_closest(camera_locations, np.array([direction_vectors[j][i] for j in range(3)])))
+    locations  = list(filter(lambda v:  not np.all(np.equal(np.array([-100000,-100000,-100000]), v)), locations))
+    x_locations = [locations[i][0,0] for i in range (len(locations))]
+    y_locations = [locations[i][0,1] for i in range (len(locations))]
+    z_locations = [locations[i][0,2] for i in range (len(locations))]
+    %matplotlib widget
+
+    fig = plt.figure()
+    ax = Axes3D(fig)
+    plot_geeks = ax.scatter(x_locations, y_locations, z_locations)
+    plt.show()
+
+    # plt.plot(x_locations, y_locations,  'o')
+    # plt.show()
+    # plt.plot (z_locations, 'o')
+    # plt.show()
+
 

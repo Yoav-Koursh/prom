@@ -63,7 +63,6 @@ if __name__ == '__main__':
     x_locations = [locations[i][0,0] for i in range (len(locations))]
     y_locations = [locations[i][0,1] for i in range (len(locations))]
     z_locations = [locations[i][0,2] for i in range (len(locations))]
-    %matplotlib widget
 
     fig = plt.figure()
     ax = Axes3D(fig)

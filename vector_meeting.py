@@ -13,6 +13,3 @@ def vector_meeting(direction_vectors, origin_vectors):
     inverse_A = np.linalg.inv(A)
     return np.dot(inverse_A ,B)
 
-direction = np.array([[1,0,0],[0,1,0]])
-origin = np.array([[0,1,0], [1,0,0]])
-vector_meeting(direction, origin)

@@ -1,5 +1,7 @@
 import numpy as np
 
+import moving_avg
+
 
 def find_speed(locations, FPS):
     speed_values = []
@@ -14,4 +16,7 @@ def find_speed(locations, FPS):
             speed_values+=[( distance * FPS) ]* num_of_frames
             num_of_frames = 1
             last_location = locations[i]
+    print(f'speed values pre {speed_values}')
+    speed_values = moving_avg.moving_avg(speed_values, 1)
+    print(f'speed values after {speed_values}')
     return speed_values

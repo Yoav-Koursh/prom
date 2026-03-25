@@ -12,13 +12,7 @@ def find_closest(O, D):
     D = [D_improved[i] / np.sum(D_improved[i]*D_improved[i])**0.5 for i in range(len(D_improved))]
     A = sum(np.array([np.identity(3) - np.array([D[i]]) * np.array([D[i]]).T for i in range(len(D))]))
     b = sum(np.array([np.matmul((np.identity(3) - np.array([D[i]]) * np.array([D[i]]).T), np.array([O[i]]).T) for i in range(len(D))]))
-    #print(np.array([D[0]]) * np.array([D[0]]).T)
-    #print('A:\n',A,'\n\n')
-    #print('b:\n',b,'\n\n')
-    #print((np.identity(3) - np.array([D[0]]) * np.array([D[0]]).T), '\n\n', np.array([O[0]]).T, '\n\n', np.array([O[0]]), '\n\n', (np.identity(3) - np.array([D[0]]) * np.array([D[0]]).T) * np.array([O[0]]).T, '\n\n', (np.identity(3) - np.array([D[0]]) * np.array([D[0]]).T) * np.array([O[0]]))
-    #print('\n\n', A, '\n\n')
-    #print(B,'\n\n')
-    # return np.linalg.solve(A, B)
+
     A_inv = np.linalg.inv(A)
 
     return np.matmul(A_inv, b).T

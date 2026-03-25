@@ -5,12 +5,13 @@ import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 
 import calc_point
+import find_speed
 import image_cut
 import moving_avg
 import video_to_vector
 import math
 import matplotlib.pyplot as plt
-
+desired_fps = 15
 if __name__ == '__main__':
     R = 0.3 # distance from middle to each camera in meters
     camera_angles = np.array([(1,1.9 ),(0.7549, 1.2042 ), (0.7242,1.3676), (0.7927, 1.48827),(0.488, 0.6342)])  #reinforced, HP, red, lenovo, basic
@@ -34,7 +35,7 @@ if __name__ == '__main__':
     #
     camera_locations = [np.array([0.625,0,0]),np.array([0,0,0]),np.array([-0.68,0,0])]
 
-    videos = image_cut.image_cut('fulltest1.mp4', 30, 15)
+    videos = image_cut.image_cut('fulltest2.mp4', 30, desired_fps)
     print(len(videos[0]))
     direction_vectors = []
 
@@ -59,5 +60,6 @@ if __name__ == '__main__':
     plt.show()
     plt.plot (z_locations, 'o')
     plt.show()
-
-
+    speed_values = find_speed.find_speed(locations, desired_fps)
+    plt.plot(speed_values, 'o')
+    plt.show()

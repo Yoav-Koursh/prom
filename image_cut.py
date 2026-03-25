@@ -35,11 +35,12 @@ def image_cut(video_file, camera_fps, desired_fps):
         #if n % 20 == 0:
         #    print(n)
         ret, frame = cap.read()
-        if n%(camera_fps/desired_fps) != 0:
-            continue
+
         if not ret:
             break   # No more frames -> exit loop
 
+        if n % (camera_fps // desired_fps) != 0:
+            continue
         # cv2.imshow("Video", frame)
 
         H, W = frame.shape[:2]

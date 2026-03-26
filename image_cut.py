@@ -53,3 +53,27 @@ def image_cut(video_file, camera_fps, desired_fps):
     cap.release()
     cv2.destroyAllWindows()
     return cut_videos
+
+
+
+def extract_frames(path_list, origin_fps, target_fps, first_frame, last_frame):
+    videos = []
+    for path in path_list:
+        curr_vid = cv2.VideoCapture(path)
+        videos.append([])
+
+        # Check if the video opened correctly
+        if not curr_vid.isOpened():
+            print("Error: Could not open video file.")
+            exit()
+
+        for i in range(first_frame, last_frame, target_fps):
+            if i % 100 == 0:
+                print(".", end='')
+
+            curr_vid.set(cv2.CAP_PROP_POS_FRAMES, i)
+            ret, frame = curr_vid.read()
+            if not ret:
+                break
+            videos[-1].append(frame)
+    return videos

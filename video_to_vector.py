@@ -56,8 +56,9 @@ def image_to_vector(cap, camera_index):
         #    cv2.imshow(frame_name, current_subtracted_frame)
         b, g, r = cv2.split(current_subtracted_frame)
         # cv2.imshow( str(n),b)
-        # cv2.imshow(str(n), current_subtracted_frame)
-        edges_arr = find_edges(b,n)
+        if n % 30 == 0:
+            cv2.imshow(str(n), current_subtracted_frame)
+        edges_arr = find_edges(current_subtracted_frame,n)
 
         object_locations.append(border_grouping.find_object_locations(edges_arr))
         img2 = img1

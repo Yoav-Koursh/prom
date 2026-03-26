@@ -35,24 +35,22 @@ if __name__ == '__main__':
     camera_locations = [np.array([0.625,0,0]),np.array([0,0,0]),np.array([-0.68,0,0])]
 
     videos = image_cut.image_cut('fulltest1.mp4', 30, 15)
-    print(len(videos[0]))
-    direction_vectors = []
+    locations = []
+    for i in range (1,len(videos[0])):
+        direction_vectors=[]
+        direction_vectors.append(video_to_vector.image_to_vector(videos[0][i-1], videos[0][i],2))
+        direction_vectors.append(video_to_vector.image_to_vector(videos[2][i-1], videos[2][i],3))
+        direction_vectors.append(video_to_vector.image_to_vector(videos[1][i-1], videos[1][i],0))
+        locations.append(calc_point.find_closest(camera_locations,direction_vectors ))
 
-    # for i in range(5):
-    #     direction_vectors.append(video_to_vector.find_direction_from_vid(videos[i], i))
-
-    # direction_vectors.append(video_to_vector.find_direction_from_vid(videos[0], 2))
-    direction_vectors.append(video_to_vector.find_direction_from_vid(videos[2], 3))
-    direction_vectors.append(video_to_vector.find_direction_from_vid(videos[1], 0))
 
     # plt.show()
-    locations = []
     for i in range(len(direction_vectors[0])):
-        locations.append(calc_point.find_closest(camera_locations, np.array([direction_vectors[j][i] for j in range(len(direction_vectors))])))
     locations  = list(filter(lambda v:  not np.all(np.equal(np.array([-100000,-100000,-100000]), v)), locations))
     x_locations = [locations[i][0,0] for i in range (len(locations))]
     y_locations = [-locations[i][0,1] for i in range (len(locations))]
     z_locations = [locations[i][0,2] for i in range (len(locations))]
+
 
     print([(float(x_locations[i]), float(y_locations[i]), float(z_locations[i])) for i in range(len(locations[2:50]))])
     plt.plot(x_locations, y_locations, 'o')

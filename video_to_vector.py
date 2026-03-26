@@ -67,8 +67,17 @@ def find_direction_from_vid(video, camera_index):
 # cv2.destroyAllWindows()
 
 def predicted_pixel(v, a):
+    print(f'og prediction {v}')
     v = np.array(v)
     v = v/v[2]
-    prediction_x = 1920*math.tan(a[0]/2)/(2*v[0])
-    prediction_y= 1080*math.tan(a[1]/2)/(2*v[1])
+    if v[0] == 0:
+        prediction_x = 0
+    else:
+        prediction_x = 1920*math.tan(a[0]/2)/(2*v[0])
+    if v[1] == 0:
+        prediction_y = 0
+    else:
+        prediction_y= 1080*math.tan(a[1]/2)/(2*v[1])
+        print (f' pridiction x{ prediction_x}, prediction y {prediction_y}')
     return (prediction_y, prediction_x)
+

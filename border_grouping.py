@@ -4,9 +4,9 @@ import numpy as np
 from matplotlib import pyplot as plt
 sys.setrecursionlimit(10000)
 
-def find_object_locations(img): #finds border with most pixels and returns its avg location
+def find_object_locations(img, expected_loc, R): #finds border with most pixels and returns its avg location
     img_size = img.shape
-    object_location = (0,0)
+    object_location = (-10000,-10000)
     most_pixels = 0
     while True:
         non_empty_pixels = np.transpose(np.nonzero(img))

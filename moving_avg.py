@@ -5,3 +5,5 @@ def moving_avg(data, R):
     weights = np.ones(window_size)/window_size
     sma = np.convolve(data, weights, mode = 'valid')
     return sma
+
+

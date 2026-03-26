@@ -1,3 +1,4 @@
+import math
 
 import cv2
 import numpy as np
@@ -22,29 +23,20 @@ def find_edges(img):
     return edges_arr
 
 
-def image_to_vector(img1, img2, camera_index):
+def image_to_vector(img1, img2, camera_index, expected_loc, R):
     img2 = image_distort.correct_image(img2, camera_index)
     img1 = image_distort.correct_image(img1, camera_index)
     current_subtracted_frame = cv2.subtract(img1, img2)
     b, g, r = cv2.split(current_subtracted_frame)
     edges_arr = find_edges(b)
-    object_location = border_grouping.find_object_locations(edges_arr)
+    object_location = border_grouping.find_object_locations(edges_arr, expected_loc, R)
+    if object_location == (-10000,-10000):
+        return None
     centered_location = (object_location - np.array([540, 1920 / 2])) * np.array([-1, 1])
     direction_vector = centered_location * 2 / np.array([540, 1920 / 2]) * np.tan(camera_angles[camera_index] / 2)
     direction_vector_3d = [direction_vector[1], direction_vector[0], 1]
     return direction_vector_3d
 
-"""sub_img = cv2.subtract(cv2.imread("imtest1.jpg"), cv2.imread("imtest2.jpg"))
-edges_img = find_edges(sub_img)
-loc = border_grouping.find_object_locations(find_edges(sub_img))
-x = [-1920 / 2, 1920 / 2, 1920 / 2, -1920 / 2, loc[1]]
-y = [1080 / 2, 1080 / 2, -1080 / 2, -1080 / 2, -loc[0]]
-
-# cv2.imshow("sub", sub_img)
-
-plt.plot(x, y, 'o')
-plt.show()
-"""
 
 def find_direction_from_vid(video, camera_index):
 
@@ -74,3 +66,9 @@ def find_direction_from_vid(video, camera_index):
 # cv2.waitKey(0)
 # cv2.destroyAllWindows()
 
+def predicted_pixel(v, a):
+    v = np.array(v)
+    v = v/v[2]
+    prediction_x = 1920*math.tan(a[0]/2)/(2*v[0])
+    prediction_y= 1080*math.tan(a[1]/2)/(2*v[1])
+    return (prediction_y, prediction_x)

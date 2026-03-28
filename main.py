@@ -13,7 +13,7 @@ import math
 import matplotlib.pyplot as plt
 
 
-desired_fps = 15
+desired_fps =2
 
 REINFORCED_INDEX, HP_INDEX, RED_INDEX, LENOVO_INDEX, BASIC_INDEX = 0, 1, 2, 3, 4
 
@@ -38,9 +38,10 @@ if __name__ == '__main__':
     # ]
     #
     #
-    camera_locations = [np.array([-3.00,-2.62,0]), np.array([3.74,0,0]),np.array([0.80,4.63,0])]
+    camera_locations = [np.array([-4.1,-4.05,0]), np.array([4.05,-4.2,0]),np.array([5.6,0,0])]
 
-    videos = image_cut.extract_frames(["test1\\hp(-300,-262).mp4", "test1\\lenovo(374,0).mp4", "test1\\reinfourced(80,463).mp4"], 30, 5, 58 * 30, 62 * 30) # image_cut.image_cut('fulltest2.mp4', 30, desired_fps)
+    # videos = image_cut.extract_frames(["test1\\hp(-300,-262).mp4", "test1\\lenovo(374,0).mp4", "test1\\reinfourced(80,463).mp4"], 30, 5, 58 * 30, 62 * 30) # image_cut.image_cut('fulltest2.mp4', 30, desired_fps)
+    videos = image_cut.image_cut('videos/drone1-1.5.mp4', 30,desired_fps)
     print(len(videos[0]))
     direction_vectors = []
 
@@ -50,17 +51,19 @@ if __name__ == '__main__':
     direction_vectors.append(video_to_vector.find_direction_from_vid(videos[0], HP_INDEX))
     direction_vectors.append(video_to_vector.find_direction_from_vid(videos[1], LENOVO_INDEX))
     direction_vectors.append(video_to_vector.find_direction_from_vid(videos[2], REINFORCED_INDEX))
-
+    direction_vectors[2] = -direction_vectors[2]
     # plt.show()
     locations = []
     for i in range(min([len(k) for k in direction_vectors])):
         locations.append(calc_point.find_closest(camera_locations, np.array([direction_vectors[j][i] for j in range(len(direction_vectors))])))
+
     locations  = list(filter(lambda v:  not np.all(np.equal(np.array([-100000,-100000,-100000]), v)), locations))
     x_locations = [locations[i][0,0] for i in range (len(locations))]
     y_locations = [-locations[i][0,1] for i in range (len(locations))]
     z_locations = [locations[i][0,2] for i in range (len(locations))]
-
-    print([(float(x_locations[i]), float(y_locations[i]), float(z_locations[i])) for i in range(len(locations[2:50]))])
+    with open('results.txt', 'w') as file:
+        for i in range(len(locations)):
+            file.write(str((float(x_locations[i]), float(y_locations[i]), float(z_locations[i])))+',')
     plt.plot(x_locations, y_locations, 'o')
     plt.show()
     plt.plot (z_locations, 'o')
@@ -68,3 +71,5 @@ if __name__ == '__main__':
     speed_values = find_speed.find_speed(locations, desired_fps)
     plt.plot(speed_values, 'o')
     plt.show()
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()

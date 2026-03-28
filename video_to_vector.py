@@ -14,7 +14,7 @@ camera_angles = np.array([(1,1.9 ),(0.7549, 1.2042 ), (0.7242,1.3676), (0.7927, 
 
 
 def find_edges(img,n=0):
-    thresh = 30
+    thresh = 20
     img_blur = cv2.threshold(img, thresh, 255, cv2.THRESH_BINARY)[1]
     # cv2.imshow(n, img_blur)
     # Sobel Edge Detection
@@ -50,23 +50,28 @@ def image_to_vector(cap, camera_index):
         img1 = image_distort.correct_image(frame1, camera_index) #fix image distortion
 
         current_subtracted_frame = cv2.subtract(img1, img2)
+        print(n)
         # if n ==20 or n==25:
         frame_name = f' camera {camera_index} frame {n}'
         #if n == 30:
         #    cv2.imshow(frame_name, current_subtracted_frame)
         b, g, r = cv2.split(current_subtracted_frame)
         # cv2.imshow( str(n),b)
-        if n % 30 == 0:
-            cv2.imshow(str(n), current_subtracted_frame)
-        edges_arr = find_edges(current_subtracted_frame,n)
 
+        edges_arr = find_edges(current_subtracted_frame,n)
+        if n % 60 == 0:
+            cv2.imshow(f'{n} img1', img1)
+            cv2.imshow(f'{n} img2', img2)
+            cv2.imshow(f'{n} subtracted image', current_subtracted_frame)
+            cv2.imshow(f'{n} edges ', edges_arr)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
         object_locations.append(border_grouping.find_object_locations(edges_arr))
         img2 = img1
         n += 1
     # Release resources
     # cap.release()
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+
     return object_locations
 
 """sub_img = cv2.subtract(cv2.imread("imtest1.jpg"), cv2.imread("imtest2.jpg"))

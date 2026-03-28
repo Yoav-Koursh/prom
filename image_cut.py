@@ -27,7 +27,7 @@ def image_cut(video_file, camera_fps, desired_fps):
         print("Error: Could not open video file.")
         exit()
 
-    cut_videos = [[],[],[],[],[]]
+    cut_videos = [[],[],[]]
     n = 0
     # Read and display video frames
     while True:
@@ -39,14 +39,15 @@ def image_cut(video_file, camera_fps, desired_fps):
         if not ret:
             break   # No more frames -> exit loop
 
-        if n % (camera_fps // desired_fps) != 0 or n < 40 or n > 100:
+        if n % (camera_fps // desired_fps) != 0 or n <  1800 or n > 2700:
             continue
         # cv2.imshow("Video", frame)
+        print(n)
 
         H, W = frame.shape[:2]
         cuts = []
-        cut_h, cut_w = H // 5, W // 5
-        for i in range(5):
+        cut_h, cut_w = H // 3, W // 3
+        for i in range(3):
             cut_videos[i].append(frame[:, cut_w*i:cut_w*(i+1)])
 
     # Release resources

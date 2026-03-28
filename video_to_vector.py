@@ -14,7 +14,7 @@ camera_angles = np.array([(1,1.9 ),(0.7549, 1.2042 ), (0.7242,1.3676), (0.7927, 
 
 
 def find_edges(img,n=0):
-    thresh = 20
+    thresh = 50
     img_blur = cv2.threshold(img, thresh, 255, cv2.THRESH_BINARY)[1]
     # cv2.imshow(n, img_blur)
     # Sobel Edge Detection
@@ -63,7 +63,7 @@ def image_to_vector(cap, camera_index):
             cv2.imshow(f'{n} img1', img1)
             cv2.imshow(f'{n} img2', img2)
             cv2.imshow(f'{n} subtracted image', current_subtracted_frame)
-            cv2.imshow(f'{n} edges ', edges_arr)
+            cv2.imshow(f'{n} edges ', edges_arr*255)
             cv2.waitKey(0)
             cv2.destroyAllWindows()
         object_locations.append(border_grouping.find_object_locations(edges_arr))
@@ -103,12 +103,12 @@ def find_direction_from_vid(video, camera_index):
     # transposed_smooth_object_location = (moving_avg.moving_avg(transpoded_object_location[0], 3), moving_avg.moving_avg(transpoded_object_location[1], 3))
     # smooth_object_location = np.transpose(transposed_smooth_object_location)
 
-    smooth_object_location = (object_locations - np.array([540, 1920 / 2])) * np.array([-1, 1])
-    direction_vector = smooth_object_location * 2 / np.array([540, 1920 / 2]) * np.tan(camera_angles[camera_index] / 2)
+    smooth_object_location = (object_locations - np.array([180, 640 / 2])) * np.array([-1, 1])
+    direction_vector = smooth_object_location * 2 / np.array([180, 640 / 2]) * np.tan(camera_angles[camera_index] / 2)
     # plt.plot(direction_vector[1], direction_vector[0], 'o')
     direction_vector_3d = np.array([[vector[1], vector[0], 1] for vector in direction_vector])
-    ypoints = [-loc[0] + 540 for loc in object_locations] + [1920 / 2, 1920 / 2, -1920 / 2, -1920 / 2] # np.append(smooth_object_location[1], [1920 / 2, 1920 / 2, -1920 / 2, -1920 / 2])
-    xpoints = [loc[1] - 1920 / 2 for loc in object_locations] + [1080 / 2, 1080 / 2, -1080 / 2, -1080 / 2]# np.append(smooth_object_location[0], [1080 / 2, 1080 / 2, -1080 / 2, -1080 / 2])
+    ypoints = [-loc[0] + 180 for loc in object_locations] + [640 / 2, 640 / 2, -640 / 2, -640 / 2] # np.append(smooth_object_location[1], [1920 / 2, 1920 / 2, -1920 / 2, -1920 / 2])
+    xpoints = [loc[1] - 640 / 2 for loc in object_locations] + [360 / 2, 360 / 2, -360 / 2, -360 / 2]# np.append(smooth_object_location[0], [1080 / 2, 1080 / 2, -1080 / 2, -1080 / 2])
     plt.plot(xpoints, ypoints, 'o')
     plt.show()
     direction_vector_3d = np.array([direction_vector_3d[i] if object_locations_map[i] else np.array((-100000,-100000,-100000))for i in range (len(object_locations_map))])
@@ -116,12 +116,12 @@ def find_direction_from_vid(video, camera_index):
 
     # viewing the data
 
-    xpoints = np.array([i[1] - (1920 / 2) for i in object_locations] + [1920 / 2, 1920 / 2, -1920 / 2, -1920 / 2])
-    ypoints = np.array([-i[0] + (540) for i in object_locations] + [-1080 / 2, 1080 / 2, 1080 / 2, -1080 / 2])
+    xpoints = np.array([i[1] - (640 / 2) for i in object_locations] + [640 / 2, 640 / 2, -640 / 2, -640 / 2])
+    ypoints = np.array([-i[0] + (180) for i in object_locations] + [-360 / 2, 360 / 2, 360 / 2, -360 / 2])
     plt.plot(xpoints, ypoints, 'o')
 
-    xavgpoints = np.array([i[1] for i in smooth_object_location] + [1920 / 2, 1920 / 2, -1920 / 2, -1920 / 2])
-    yavgpoints = np.array([i[0] for i in smooth_object_location] + [-1080 / 2, 1080 / 2, 1080 / 2, -1080 / 2])
+    xavgpoints = np.array([i[1] for i in smooth_object_location] + [640 / 2, 640 / 2, -640 / 2, -640 / 2])
+    yavgpoints = np.array([i[0] for i in smooth_object_location] + [-360 / 2, 360 / 2, 360 / 2, -360 / 2])
     plt.plot(xpoints, ypoints)
     plt.plot(xavgpoints, yavgpoints, 'o')
 

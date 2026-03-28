@@ -55,6 +55,7 @@ Camera_data = [ #reinforced, HP, red, lenovo, basic
 
 # --- 3. PROCESS THE IMAGE ---
 def correct_image(img, camera_index_used):
+    return img
     if img is None:
         print("Error: Could not load image. Check the file name.")
         return None
@@ -62,3 +63,5 @@ def correct_image(img, camera_index_used):
         # Example using Reinforced Camera - swap these variables to test other cameras
         new_img = cv2.undistort(img, Camera_data[camera_index_used][0], Camera_data[camera_index_used][1])
         return new_img
+
+

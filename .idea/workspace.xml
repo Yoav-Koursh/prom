@@ -6,13 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="28f5fcae-b4a6-470e-b6d3-b046dc8431fe" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image_cut.py" beforeDir="false" afterPath="$PROJECT_DIR$/image_cut.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/image_distort.py" beforeDir="false" afterPath="$PROJECT_DIR$/image_distort.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/results.txt" beforeDir="false" afterPath="$PROJECT_DIR$/results.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/video_to_vector.py" beforeDir="false" afterPath="$PROJECT_DIR$/video_to_vector.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/videos/2026-03-27 15-32-29.mp4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/videos/2026-03-27 15-32-48.mp4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/videos/2026-03-27 15-38-42.mp4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/videos/2026-03-27 15-48-10.mp4" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,6 +43,7 @@
     "Python.border_grouping.executor": "Run",
     "Python.find_speed.executor": "Run",
     "Python.image_cut.executor": "Run",
+    "Python.image_distort.executor": "Run",
     "Python.integrated_code.executor": "Run",
     "Python.main.executor": "Run",
     "Python.moving_avg.executor": "Run",
@@ -90,10 +87,11 @@
     <SUITE FILE_PATH="coverage/prom$vector_meeting.coverage" NAME="vector_meeting Coverage Results" MODIFIED="1774290710180" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/prom$border_grouping.coverage" NAME="border_grouping Coverage Results" MODIFIED="1774258677097" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/prom$image_cut.coverage" NAME="image_cut Coverage Results" MODIFIED="1774691404967" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/prom$main.coverage" NAME="main Coverage Results" MODIFIED="1774700665734" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/prom$main.coverage" NAME="main Coverage Results" MODIFIED="1774729319922" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/prom$video_to_vector.coverage" NAME="video_to_vector Coverage Results" MODIFIED="1774424708097" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/prom$moving_avg.coverage" NAME="moving_avg Coverage Results" MODIFIED="1774436441581" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/prom$2photostest.coverage" NAME="2photostest Coverage Results" MODIFIED="1774258679868" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/prom$find_speed.coverage" NAME="find_speed Coverage Results" MODIFIED="1774436337053" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/prom$image_distort.coverage" NAME="image_distort Coverage Results" MODIFIED="1774728718645" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

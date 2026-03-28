@@ -34,14 +34,18 @@ def find_edges(img,n=0):
 
 
 def image_to_vector(cap, camera_index):
-    object_locations =[]
+    object_locations =[(0,0), (0,0)]
     # Check if the video opened correctly
     # if not cap.isOpened():
     #    print("Error: Could not open video file.")
     #    exit()
     n = 1
+    R= 300
     frame2 = cap[0]
     img2 = image_distort.correct_image(frame2, camera_index)
+    counter = 1
+    predicted_locations = []
+    last_location = (-100000,-100000)
     while True:
         if n >= len(cap):
             break
@@ -55,18 +59,28 @@ def image_to_vector(cap, camera_index):
         #if n == 30:
         #    cv2.imshow(frame_name, current_subtracted_frame)
         b, g, r = cv2.split(current_subtracted_frame)
-        # cv2.imshow( str(n),b)
         if n % 30 == 0:
             cv2.imshow(str(n), current_subtracted_frame)
         edges_arr = find_edges(current_subtracted_frame,n)
-
-        object_locations.append(border_grouping.find_object_locations(edges_arr))
+        print(f' 1: {object_locations[-1]}, 2: {object_locations[-2]}')
+        predicted_locations.append(((counter+1)* object_locations[-1][0] - counter * object_locations[-2][0], (counter+1)* object_locations[-1][1] - counter * object_locations[-2][1]))
+        object_locations.append(border_grouping.find_object_locations(edges_arr, predicted_locations[-1], R))
         img2 = img1
         n += 1
-    # Release resources
-    # cap.release()
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+        if object_locations[-1] != (0,0):
+            counter = 1
+            last_location = object_locations[-1]
+        else:
+            counter += 1
+    ypoints = [-loc[0] + 540 for loc in object_locations] + [1920 / 2, 1920 / 2, -1920 / 2, -1920 / 2]  # np.append(smooth_object_location[1], [1920 / 2, 1920 / 2, -1920 / 2, -1920 / 2])
+    xpoints = [loc[1] - 1920 / 2 for loc in object_locations] + [1080 / 2, 1080 / 2, -1080 / 2, -1080 / 2]  # np.append(smooth_object_location[0], [1080 / 2, 1080 / 2, -1080 / 2, -1080 / 2])
+    plt.plot(xpoints, ypoints, 'o')
+    ypoints = [-loc[0] + 540 for loc in predicted_locations] + [1920 / 2, 1920 / 2, -1920 / 2,-1920 / 2]  # np.append(smooth_object_location[1], [1920 / 2, 1920 / 2, -1920 / 2, -1920 / 2])
+    xpoints = [loc[1] - 1920 / 2 for loc in predicted_locations] + [1080 / 2, 1080 / 2, -1080 / 2, -1080 / 2]
+    plt.plot(xpoints, ypoints, 'o')
+
+    plt.show()
+
     return object_locations
 
 """sub_img = cv2.subtract(cv2.imread("imtest1.jpg"), cv2.imread("imtest2.jpg"))

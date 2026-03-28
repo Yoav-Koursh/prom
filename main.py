@@ -40,8 +40,8 @@ if __name__ == '__main__':
     #
     camera_locations = [np.array([-3.00,-2.62,0]), np.array([3.74,0,0]),np.array([0.80,4.63,0])]
 
-    videos = image_cut.extract_frames(["test1\\hp(-300,-262).mp4", "test1\\lenovo(374,0).mp4", "test1\\reinfourced(80,463).mp4"], 30, 5, 58 * 30, 62 * 30) # image_cut.image_cut('fulltest2.mp4', 30, desired_fps)
-    print(len(videos[0]))
+    # videos = image_cut.extract_frames(["test1\\hp(-300,-262).mp4", "test1\\lenovo(374,0).mp4", "test1\\reinfourced(80,463).mp4"], 30, 5, 58 * 30, 62 * 30) # image_cut.image_cut('fulltest2.mp4', 30, desired_fps)
+    videos = image_cut.image_cut('fulltest2.mp4', 30, 15)
     direction_vectors = []
 
     # for i in range(5):
@@ -61,10 +61,10 @@ if __name__ == '__main__':
     z_locations = [locations[i][0,2] for i in range (len(locations))]
 
     print([(float(x_locations[i]), float(y_locations[i]), float(z_locations[i])) for i in range(len(locations[2:50]))])
-    plt.plot(x_locations, y_locations, 'o')
-    plt.show()
-    plt.plot (z_locations, 'o')
-    plt.show()
-    speed_values = find_speed.find_speed(locations, desired_fps)
-    plt.plot(speed_values, 'o')
-    plt.show()
+    # plt.plot(x_locations, y_locations, 'o')
+    # plt.show()
+    # plt.plot (z_locations, 'o')
+    # plt.show()
+    # speed_values = find_speed.find_speed(locations, desired_fps)
+    # plt.plot(speed_values, 'o')
+    # plt.show()

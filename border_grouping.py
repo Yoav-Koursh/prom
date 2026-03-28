@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 sys.setrecursionlimit(10000)
 
-def find_object_locations(img): #finds border with most pixels and returns its avg location
+def find_object_locations(img, expected_loc, R): #finds border with most pixels and returns its avg location
     img_size = img.shape
     object_location = (0,0)
     most_pixels = 0
@@ -14,10 +14,11 @@ def find_object_locations(img): #finds border with most pixels and returns its a
             break
         else:
             num_pixels , object_pixels = find_object_helper(img , non_empty_pixels[0],set() )
-            if num_pixels > most_pixels and num_pixels > 10:
-                object_pixels_array = np.array([*object_pixels])+0.5
-                temp= np.sum(object_pixels_array, axis = 0)
-                object_location = tuple( temp/num_pixels)
+            object_pixels_array = np.array([*object_pixels]) + 0.5
+            temp = np.sum(object_pixels_array, axis=0)
+            temp_object_location = tuple(temp / num_pixels)
+            if num_pixels > most_pixels and num_pixels > 10 :#and temp_object_location[0] < expected_loc[0] + R and temp_object_location[0] > expected_loc[0] - R and temp_object_location[1] < expected_loc[1] + R and temp_object_location[1] > expected_loc[1] - R :
+                object_location = temp_object_location
                 most_pixels = num_pixels
                 x = [p[1] for p in object_pixels]  # + [-1920 / 2, 1920 / 2, 1920 / 2, -1920 / 2]
                 y = [p[0] for p in object_pixels]  # [1080 / 2, 1080 / 2, -1080 / 2, -1080 / 2]

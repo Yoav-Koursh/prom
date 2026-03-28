@@ -13,9 +13,8 @@ import math
 import matplotlib.pyplot as plt
 
 
-desired_fps =2
+target_fps =2
 
-REINFORCED_INDEX, HP_INDEX, RED_INDEX, LENOVO_INDEX, BASIC_INDEX = 0, 1, 2, 3, 4
 
 if __name__ == '__main__':
     # R = 0.3 # distance from middle to each camera in meters
@@ -41,16 +40,16 @@ if __name__ == '__main__':
     camera_locations = [np.array([-4.1,-4.05,0]), np.array([4.05,-4.2,0]),np.array([5.6,0,0])]
 
     # videos = image_cut.extract_frames(["test1\\hp(-300,-262).mp4", "test1\\lenovo(374,0).mp4", "test1\\reinfourced(80,463).mp4"], 30, 5, 58 * 30, 62 * 30) # image_cut.image_cut('fulltest2.mp4', 30, desired_fps)
-    videos = image_cut.image_cut('videos/drone1-1.5.mp4', 30,desired_fps)
+    videos = image_cut.image_cut('videos/drone1-1.5.mp4', 30,  1800, 2700, target_fps)
     print(len(videos[0]))
     direction_vectors = []
 
     # for i in range(5):
     #     direction_vectors.append(video_to_vector.find_direction_from_vid(videos[i], i))
 
-    direction_vectors.append(video_to_vector.find_direction_from_vid(videos[0], HP_INDEX))
-    direction_vectors.append(video_to_vector.find_direction_from_vid(videos[1], LENOVO_INDEX))
-    direction_vectors.append(video_to_vector.find_direction_from_vid(videos[2], REINFORCED_INDEX))
+    direction_vectors.append(video_to_vector.find_direction_from_vid(videos[0], video_to_vector.HP_INDEX))
+    direction_vectors.append(video_to_vector.find_direction_from_vid(videos[1], video_to_vector.LENOVO_INDEX))
+    direction_vectors.append(video_to_vector.find_direction_from_vid(videos[2], video_to_vector.REINFORCED_INDEX))
     direction_vectors[2] = -direction_vectors[2]
     # plt.show()
     locations = []
@@ -68,7 +67,7 @@ if __name__ == '__main__':
     plt.show()
     plt.plot (z_locations, 'o')
     plt.show()
-    speed_values = find_speed.find_speed(locations, desired_fps)
+    speed_values = find_speed.find_speed(locations, target_fps)
     plt.plot(speed_values, 'o')
     plt.show()
     cv2.waitKey(0)

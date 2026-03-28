@@ -11,7 +11,7 @@ import moving_avg
 
 camera_angles = np.array([(1,1.9 ),(0.7549, 1.2042 ), (0.7242,1.3676), (0.7927, 1.48827),(0.488, 0.6342)])  #reinforced, HP, red, lenovo, basic
 
-
+REINFORCED_INDEX, HP_INDEX, RED_INDEX, LENOVO_INDEX, BASIC_INDEX = 0, 1, 2, 3, 4
 
 def find_edges(img,n=0):
     thresh = 50
@@ -51,6 +51,8 @@ def image_to_vector(cap, camera_index):
 
         current_subtracted_frame = cv2.subtract(img1, img2)
         print(n)
+        if camera_index == LENOVO_INDEX:
+            current_subtracted_frame[200:, :200] = 0
         # if n ==20 or n==25:
         frame_name = f' camera {camera_index} frame {n}'
         #if n == 30:

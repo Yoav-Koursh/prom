@@ -18,7 +18,7 @@ cv2.waitKey(0)
 input()"""
 
 import cv2
-def image_cut(video_file, camera_fps, desired_fps):
+def image_cut(video_file, camera_fps, first_frame, last_frame, target_fps):
     # Load the video file
     cap = cv2.VideoCapture(video_file)
 
@@ -30,19 +30,13 @@ def image_cut(video_file, camera_fps, desired_fps):
     cut_videos = [[],[],[]]
     n = 0
     # Read and display video frames
-    while True:
-        n += 1
-        #if n % 20 == 0:
-        #    print(n)
+    for i in range(first_frame, last_frame, target_fps):
+        print(i)
+        cap.set(cv2.CAP_PROP_POS_FRAMES, i)
         ret, frame = cap.read()
 
         if not ret:
             break   # No more frames -> exit loop
-
-        if n % (camera_fps // desired_fps) != 0 or n <  1800 or n > 2700:
-            continue
-        # cv2.imshow("Video", frame)
-        print(n)
 
         H, W = frame.shape[:2]
         cuts = []

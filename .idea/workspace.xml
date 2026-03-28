@@ -6,7 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="28f5fcae-b4a6-470e-b6d3-b046dc8431fe" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image_distort.py" beforeDir="false" afterPath="$PROJECT_DIR$/image_distort.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/image_cut.py" beforeDir="false" afterPath="$PROJECT_DIR$/image_cut.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/results.txt" beforeDir="false" afterPath="$PROJECT_DIR$/results.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/video_to_vector.py" beforeDir="false" afterPath="$PROJECT_DIR$/video_to_vector.py" afterDir="false" />
     </list>
@@ -42,7 +43,7 @@
     "Python.2photostest.executor": "Run",
     "Python.border_grouping.executor": "Run",
     "Python.find_speed.executor": "Run",
-    "Python.image_cut.executor": "Run",
+    "Python.image_cut.executor": "Debug",
     "Python.image_distort.executor": "Run",
     "Python.integrated_code.executor": "Run",
     "Python.main.executor": "Run",
@@ -81,6 +82,17 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/image_cut.py</url>
+          <line>22</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/prom$integrated_code.coverage" NAME="integrated_code Coverage Results" MODIFIED="1774424693205" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

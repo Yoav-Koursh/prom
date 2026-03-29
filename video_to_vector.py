@@ -38,9 +38,11 @@ def image_to_vector(img1, img2, camera_index):
     object_location, n_pixels = border_grouping.find_object_locations(edges_arr)
     if object_location == (-10000,-10000):
         return None , 0, (0,0)
-    centered_location = (object_location - np.array([540, 1920 / 2])) * np.array([-1, 1])
-    direction_vector = centered_location * 2 / np.array([540, 1920 / 2]) * np.tan(camera_angles[camera_index] / 2)
-    direction_vector_3d = [direction_vector[1], direction_vector[0], 1]
+    centered_location = (object_location - np.array([540, 1920 / 2]))
+    tang = np.tan(camera_angles[camera_index] / 2)
+    print(tang)
+    direction_vector = (centered_location * 2 / np.array([540, 1920 / 2])) * tang
+    direction_vector_3d = [direction_vector[0], direction_vector[1], 1]
     return direction_vector_3d, n_pixels, object_location
 
 #

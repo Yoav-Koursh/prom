@@ -39,21 +39,19 @@ if __name__ == '__main__':
     video = cv2.VideoCapture('dronefootage2.mp4')
     # videos = image_cut.image_cut('fulltest1.mp4', 30, desired_fps)
     locations = []
-    # video.set(cv2.CAP_PROP_POS_FRAMES, 20)
     fps_jump = 10 #basic FPS jump
     frames_counter = 0
-    # video_length = int(video.get(cv2.CAP_PROP_FRAME_COUNT))-1
-    for i in range (30*38):
-        print(i)
-        a,b = video.read()
-    #print(video_length)
+    video.set(cv2.CAP_PROP_POS_FRAMES, 30 * 38)
+    # for i in range (30*38):
+    #     print(i)
+    #     a,b = video.read()
     prev_frames, video = image_cut.image_cut(video, fps_jump)
     frames_counter += fps_jump
     object1locs=[]
     object2locs=[]
     object3locs=[]
     direction_vecs_history=[]
-    while frames_counter<150 :
+    while frames_counter<120 :
         frames, video = image_cut.image_cut(video, fps_jump)
         if frames is None:
             break
@@ -68,13 +66,10 @@ if __name__ == '__main__':
         object1locs.append(object1loc)
         object2locs.append(object2loc)
         object3locs.append(object3loc)
+        direction_vecs_history.append(copy.deepcopy(direction_vectors))
 
         if new_loc is not None and new_loc[0][2]<0:
-            print(new_loc)
-            try:
-                locations.append(new_loc[0]*np.array([-1,1,-1]))
-            except:
-                locations += new_loc
+            locations.append(new_loc[0]*(-1)) # np.array([-1,-1,-1]))
             if len(locations)>1:
                 xy_speed = find_speed.find_xy_speed(locations[-1], locations[-2], 30/fps_jump)
                 object_pixel_num = max(n_pixels1, n_pixels2, n_pixels3)
@@ -103,21 +98,23 @@ if __name__ == '__main__':
         # predicted_locations.append(predicted_location)
     x= [object1locs[i][1] for i in range(len(object1locs))]
     y= [object1locs[i][0] for i in range(len(object1locs))]
-    plt.plot(x,y,'o')
+    plt.plot(x,y,'o', label = '1')
     x= [object2locs[i][1] for i in range(len(object2locs))]
     y= [object2locs[i][0] for i in range(len(object2locs))]
-    plt.plot(x,y,'o')
+    plt.plot(x,y,'o', label = '2')
     x= [object3locs[i][1] for i in range(len(object3locs))]
     y= [object3locs[i][0] for i in range(len(object3locs))]
-    plt.plot(x,y,'o')
+    plt.plot(x,y,'o',  label = '3')
+
+    plt.legend()
     plt.show()
 
-    x=[ [object1locs[i][1], object2locs[i][1], object3locs[i][1] ] for i in range(len(object1locs))]
-    y=[ [object1locs[i][0], object2locs[i][0], object3locs[i][0] ] for i in range(len(object1locs))]
-    for i in range(len(object1locs)):
-        plt.plot(x[i],y[i])
-        if i%5 == 0:
-            plt.show()
+    # x=[ [object1locs[i][1], object2locs[i][1], object3locs[i][1] ] for i in range(len(object1locs))]
+    # y=[ [object1locs[i][0], object2locs[i][0], object3locs[i][0] ] for i in range(len(object1locs))]
+    # for i in range(len(object1locs)):
+    #     plt.plot(x[i],y[i])
+    #     if i%5 == 0:
+    #         plt.show()
 
     print(locations)
     locations = np.array(locations)
@@ -126,7 +123,7 @@ if __name__ == '__main__':
     z_locations = [locations[i][2] for i in range (len(locations))]
     print('real deal')
     print([(float(x_locations[i]), float(y_locations[i]), float(z_locations[i])) for i in range(len(locations))])
-    # print([[f'({camera_locations[i][0]},{camera_locations[i][1]},{camera_locations[i][2]}) + t*({float(direction_vecs_history[j][i][0])},{float(direction_vecs_history[j][i][1])},{float(direction_vecs_history[j][i][2])})' for i in range(3)]for j in range(len(direction_vecs_history))])
+    # print([[f'({camera_locations[i][0]},{camera_locations[i][1]},{camera_locations[i][2]}) + t*({direction_vecs_history[j][i]})' for i in range(3)]for j in range(len(direction_vecs_history))])
     # plt.plot(x_locations, y_locations, 'o')
     # plt.show()
     # plt.plot (z_locations, 'o')

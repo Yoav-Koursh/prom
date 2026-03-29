@@ -51,7 +51,7 @@ if __name__ == '__main__':
     object2locs=[]
     object3locs=[]
     direction_vecs_history=[]
-    while frames_counter<120 :
+    while frames_counter<380 :
         frames, video = image_cut.image_cut(video, fps_jump)
         if frames is None:
             break
@@ -69,7 +69,7 @@ if __name__ == '__main__':
         direction_vecs_history.append(copy.deepcopy(direction_vectors))
 
         if new_loc is not None and new_loc[0][2]<0:
-            locations.append(new_loc[0]*(-1)) # np.array([-1,-1,-1]))
+            locations.append(new_loc[0]*np.array([-1,1,-1]))
             if len(locations)>1:
                 xy_speed = find_speed.find_xy_speed(locations[-1], locations[-2], 30/fps_jump)
                 object_pixel_num = max(n_pixels1, n_pixels2, n_pixels3)

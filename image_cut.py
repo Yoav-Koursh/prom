@@ -18,38 +18,11 @@ cv2.waitKey(0)
 input()"""
 
 import cv2
-def image_cut(video_file, camera_fps, desired_fps):
-    # Load the video file
-    cap = cv2.VideoCapture(video_file)
+def image_cut(video, fps_jump):
+    for i in range(fps_jump):
+        ret, frame = video.read()
 
-    # Check if the video opened correctly
-    if not cap.isOpened():
-        print("Error: Could not open video file.")
-        exit()
+    H, W = frame.shape[:2]
+    cut_h, cut_w = H // 5, W // 5
+    return [frame[:, cut_w*i:cut_w*(i+1)] for i in range(5)], video
 
-    cut_videos = [[],[],[],[],[]]
-    n = 0
-    # Read and display video frames
-    while True:
-        n += 1
-        #if n % 20 == 0:
-        #    print(n)
-        ret, frame = cap.read()
-
-        if not ret:
-            break   # No more frames -> exit loop
-
-        if n % (camera_fps // desired_fps) != 0 or n < 45 or n > 90:
-            continue
-        # cv2.imshow("Video", frame)
-
-        H, W = frame.shape[:2]
-        cuts = []
-        cut_h, cut_w = H // 5, W // 5
-        for i in range(5):
-            cut_videos[i].append(frame[:, cut_w*i:cut_w*(i+1)])
-
-    # Release resources
-    cap.release()
-    cv2.destroyAllWindows()
-    return cut_videos

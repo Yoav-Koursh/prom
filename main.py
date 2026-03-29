@@ -35,37 +35,28 @@ if __name__ == '__main__':
     #
     #
     camera_locations = [np.array([0.625,0,0]),np.array([0,0,0]),np.array([-0.68,0,0])]
-
-
-    videos = image_cut.image_cut('fulltest2.mp4', 30, desired_fps)
+    video = cv2.VideoCapture('fulltest2.mp4')
+    # videos = image_cut.image_cut('fulltest1.mp4', 30, desired_fps)
     locations = []
     speeds = []
     avg_speeds = []
     last_known_location = np.array([0,0,0])
-    predicted_location =np.array((0,0,1))
     expected_error = 200000
-    last_known_direction = np.array([0,0,0])
-    predicted_locations = []
-    counter = 1
-    while True: # find first location so u can subtract
-        direction_vectors = []
-        direction_vectors.append(video_to_vector.image_to_vector(videos[0][counter - 1], videos[0][counter], 2))#,video_to_vector.predicted_pixel(predicted_location - camera_locations[0], camera_angles[2]),expected_error))
-        direction_vectors.append(video_to_vector.image_to_vector(videos[2][counter - 1], videos[2][counter], 3))#,video_to_vector.predicted_pixel(predicted_location - camera_locations[1], camera_angles[3]),expected_error))
-        direction_vectors.append(video_to_vector.image_to_vector(videos[1][counter - 1], videos[1][counter], 0))#,video_to_vector.predicted_pixel(predicted_location - camera_locations[2], camera_angles[0]),expected_error))
-        locations+=(calc_point.find_closest(camera_locations, direction_vectors))
-        counter += 1
-        if locations[-1] is not None:
-            last_known_location = locations[-1]
-            break
-        if counter == len(videos[0]):
-            break
+    frame_counter = 0
+    fps_jump = 2 #basic FPS jump
+    video_length = int(video.get(cv2.CAP_PROP_FRAME_COUNT))-1
+    prev_frames, video = image_cut.image_cut(video, fps_jump)
+    frame_counter += 2*fps_jump
 
-    for i in range (counter,len(videos[0])):
+    while frame_counter < video_length:
+        frames, video = image_cut.image_cut(video, fps_jump)
+        frame_counter += fps_jump
         direction_vectors=[]
-        direction_vectors.append(video_to_vector.image_to_vector(videos[0][i-1], videos[0][i],2))#, video_to_vector.predicted_pixel(predicted_location, camera_angles[2]), expected_error))
-        direction_vectors.append(video_to_vector.image_to_vector(videos[2][i-1], videos[2][i],3))#, video_to_vector.predicted_pixel(predicted_location, camera_angles[3]), expected_error))
-        direction_vectors.append(video_to_vector.image_to_vector(videos[1][i-1], videos[1][i],0))#, video_to_vector.predicted_pixel(predicted_location, camera_angles[0]), expected_error))
+        direction_vectors.append(video_to_vector.image_to_vector(frames[0], prev_frames[0],2))#, video_to_vector.predicted_pixel(predicted_location, camera_angles[2]), expected_error))
+        direction_vectors.append(video_to_vector.image_to_vector(frames[2], prev_frames[2],3))#, video_to_vector.predicted_pixel(predicted_location, camera_angles[3]), expected_error))
+        direction_vectors.append(video_to_vector.image_to_vector(frames[1], prev_frames[1],0))#, video_to_vector.predicted_pixel(predicted_location, camera_angles[0]), expected_error))
         locations+=(calc_point.find_closest(camera_locations,direction_vectors ))
+        prev_frames = frames
         # if locations[-1] is not None:
         #     last_known_direction = locations[-1] - last_known_location
         #     last_known_direction = last_known_direction / (np.sum(last_known_direction *last_known_direction) ** 0.5)
@@ -80,8 +71,9 @@ if __name__ == '__main__':
         # predicted_locations.append(predicted_location)
     real_locations = []
     for location in locations:
-        if location is not None:
+        if location is not None and location[2]<0:
             real_locations.append(location)
+    print(real_locations)
     locations = np.array(real_locations)
     x_locations = [locations[i][0] for i in range (len(locations))]
     y_locations = [-locations[i][1] for i in range (len(locations))]

@@ -16,7 +16,7 @@ desired_fps = 15
 basic_expected_error = 1000
 if __name__ == '__main__':
     R = 0.3 # distance from middle to each camera in meters
-    camera_angles = np.array([(1,1.9 ),(0.7549, 1.2042 ), (0.7242,1.3676), (0.7927, 1.48827),(0.488, 0.6342)])  #reinforced, HP, red, lenovo, basic
+    # camera_angles = np.array([(1,1.9 ),(0.7549, 1.2042 ), (0.7242,1.3676), (0.7927, 1.48827),(0.488, 0.6342)])  #reinforced, HP, red, lenovo, basic
     # camera_locations = [
     #     # Camera 1 (top)
     #     np.array((0, R, 0)),
@@ -35,7 +35,7 @@ if __name__ == '__main__':
     # ]
     #
     #
-    camera_locations = [np.array([-3.4,0,0]),np.array([0,-5.6,0]),np.array([2.1,0,0])]
+    camera_locations = [np.array([0,-3.4,0]),np.array([-5.6,0 ,0]),np.array([0,2.1,0])]
     video = cv2.VideoCapture('dronefootage2.mp4')
     # videos = image_cut.image_cut('fulltest1.mp4', 30, desired_fps)
     locations = []
@@ -68,14 +68,14 @@ if __name__ == '__main__':
         object3locs.append(object3loc)
         direction_vecs_history.append(copy.deepcopy(direction_vectors))
 
-        if new_loc is not None and new_loc[0][2]<0:
+        if new_loc is not None:# and new_loc[0][2]<0:
             locations.append(new_loc[0]*np.array([-1,1,-1]))
             if len(locations)>1:
                 xy_speed = find_speed.find_xy_speed(locations[-1], locations[-2], 30/fps_jump)
                 object_pixel_num = max(n_pixels1, n_pixels2, n_pixels3)
                 object_pixel_radius = object_pixel_num/(2*3.14)
                 object_radius = (object_pixel_radius/ 1920)* new_loc[0][2] * math.tan(1.9)
-                fps_jump = int(object_radius * 30 // xy_speed) + 1
+                fps_jump = abs(int(object_radius * 30 // xy_speed)) + 1
                 print(fps_jump)
                 # print(f'num frames left{video_length - frame_counter}')
         else:
@@ -108,7 +108,7 @@ if __name__ == '__main__':
 
     plt.legend()
     plt.show()
-
+    print(f' camera 1 pixels{object1locs[60]}, camera 2 pixels{object2locs[60]}, camera 3 pixels{object3locs[60]}')
     # x=[ [object1locs[i][1], object2locs[i][1], object3locs[i][1] ] for i in range(len(object1locs))]
     # y=[ [object1locs[i][0], object2locs[i][0], object3locs[i][0] ] for i in range(len(object1locs))]
     # for i in range(len(object1locs)):
@@ -118,12 +118,12 @@ if __name__ == '__main__':
 
     print(locations)
     locations = np.array(locations)
-    x_locations = [locations[i][0] for i in range (len(locations))]
-    y_locations = [-locations[i][1] for i in range (len(locations))]
+    x_locations = [locations[i][1] for i in range (len(locations))]
+    y_locations = [-locations[i][0] for i in range (len(locations))]
     z_locations = [locations[i][2] for i in range (len(locations))]
     print('real deal')
     print([(float(x_locations[i]), float(y_locations[i]), float(z_locations[i])) for i in range(len(locations))])
-    # print([[f'({camera_locations[i][0]},{camera_locations[i][1]},{camera_locations[i][2]}) + t*({direction_vecs_history[j][i]})' for i in range(3)]for j in range(len(direction_vecs_history))])
+    print([[f'({camera_locations[i][0]},{camera_locations[i][1]},{camera_locations[i][2]}) + t*({direction_vecs_history[j][i]})' for i in range(3)]for j in range(len(direction_vecs_history))])
     # plt.plot(x_locations, y_locations, 'o')
     # plt.show()
     # plt.plot (z_locations, 'o')

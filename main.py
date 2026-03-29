@@ -34,28 +34,30 @@ if __name__ == '__main__':
     # ]
     #
     #
-    camera_locations = [np.array([-4.4,0,0]),np.array([0,5.6,0]),np.array([3.1,0,0])]
-    video = cv2.VideoCapture('dronefootage1.mp4')
+    camera_locations = [np.array([-3.4,0,0]),np.array([0,5.6,0]),np.array([2.1,0,0])]
+    video = cv2.VideoCapture('dronefootage2.mp4')
     # videos = image_cut.image_cut('fulltest1.mp4', 30, desired_fps)
     locations = []
-    fps_jump = 15 #basic FPS jump
-    frame_counter = 120*30
-    video.set(cv2.CAP_PROP_POS_FRAMES, 120*30)
+    # video.set(cv2.CAP_PROP_POS_FRAMES, 20)
+    fps_jump = 10 #basic FPS jump
+    frames_counter = 0
     # video_length = int(video.get(cv2.CAP_PROP_FRAME_COUNT))-1
+    for i in range (30*28):
+        print(i)
+        a,b = video.read()
     #print(video_length)
     prev_frames, video = image_cut.image_cut(video, fps_jump)
-    frame_counter+=fps_jump
-
-    while fps_jump< 145*30:
+    frames_counter += fps_jump
+    while frames_counter<80 :
         frames, video = image_cut.image_cut(video, fps_jump)
         if frames is None:
             break
         direction_vectors=[]
-        #new_direction_vec, n_pixels1 = video_to_vector.image_to_vector(frames[0], prev_frames[0],2)
-        #direction_vectors.append(new_direction_vec)#, video_to_vector.predicted_pixel(predicted_location, camera_angles[2]), expected_error))
-        new_direction_vec, n_pixels2 = video_to_vector.image_to_vector(frames[2], prev_frames[2],3)
+        new_direction_vec, n_pixels1 = video_to_vector.image_to_vector(frames[0], prev_frames[0],1)
+        direction_vectors.append(new_direction_vec)#, video_to_vector.predicted_pixel(predicted_location, camera_angles[2]), expected_error))
+        new_direction_vec, n_pixels2 = video_to_vector.image_to_vector(frames[1], prev_frames[1],3)
         direction_vectors.append(new_direction_vec)#, video_to_vector.predicted_pixel(predicted_location, camera_angles[3]), expected_error))
-        new_direction_vec, n_pixels3 = video_to_vector.image_to_vector(frames[1], prev_frames[1],0)
+        new_direction_vec, n_pixels3 = video_to_vector.image_to_vector(frames[2], prev_frames[2],0)
         direction_vectors.append(new_direction_vec)#, video_to_vector.predicted_pixel(predicted_location, camera_angles[0]), expected_error))
         new_loc =calc_point.find_closest(camera_locations,direction_vectors )
         if new_loc is not None and new_loc[0][2]<0:
@@ -65,10 +67,10 @@ if __name__ == '__main__':
                 object_pixel_num = max(n_pixels1, n_pixels2, n_pixels3)
                 object_pixel_radius = object_pixel_num/(2*3.14)
                 object_radius = (object_pixel_radius/ 1920)* new_loc[0][2] * math.tan(1.9)
-                fps_jump = int(object_radius * 40 // xy_speed) + 1
+                fps_jump = int(object_radius * 30 // xy_speed) + 1
                 print(fps_jump)
-            frame_counter += fps_jump
                 # print(f'num frames left{video_length - frame_counter}')
+        frames_counter += fps_jump
         prev_frames = frames
 
         # if locations[-1] is not None:
@@ -95,6 +97,8 @@ if __name__ == '__main__':
     # plt.show()
     # plt.plot (z_locations, 'o')
     # plt.show()
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 
 

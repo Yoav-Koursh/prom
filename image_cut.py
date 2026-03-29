@@ -24,6 +24,6 @@ def image_cut(video, fps_jump):
     if frame is None:
         return None, video
     H, W = frame.shape[:2]
-    cut_h, cut_w = H // 5, W // 5
-    return [frame[:, cut_w*i:cut_w*(i+1)] for i in range(5)], video
+    cut_h, cut_w = H // 3, W // 3
+    return [frame[:, cut_w*i:cut_w*(i+1)] for i in range(3)], video
 

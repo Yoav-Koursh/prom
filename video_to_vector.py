@@ -23,7 +23,7 @@ def find_edges(img):
     return edges_arr
 
 
-def image_to_vector(img1, img2, camera_index, n):
+def image_to_vector(img1, img2, camera_index):
     img2 = image_distort.correct_image(img2, camera_index)
     img1 = image_distort.correct_image(img1, camera_index)
     current_subtracted_frame = cv2.subtract(img1, img2)
@@ -32,17 +32,16 @@ def image_to_vector(img1, img2, camera_index, n):
     # cv2.imshow('imgb', img2)
     # cv2.imshow('subtract', current_subtracted_frame)
     edges_arr = find_edges(current_subtracted_frame)
-    cv2.imshow(f'frame {n} camera {camera_index}', edges_arr*255)
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
 
     object_location, n_pixels = border_grouping.find_object_locations(edges_arr)
     if object_location == (-10000,-10000):
-        return None , 0
+        return None , 0, (0,0)
     centered_location = (object_location - np.array([540, 1920 / 2])) * np.array([-1, 1])
     direction_vector = centered_location * 2 / np.array([540, 1920 / 2]) * np.tan(camera_angles[camera_index] / 2)
     direction_vector_3d = [direction_vector[1], direction_vector[0], 1]
-    return direction_vector_3d, n_pixels
+    return direction_vector_3d, n_pixels, object_location
 
 #
 # def find_direction_from_vid(video, camera_index):

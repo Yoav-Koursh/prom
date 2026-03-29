@@ -23,13 +23,13 @@ def find_edges(img):
     return edges_arr
 
 
-def image_to_vector(img1, img2, camera_index, expected_loc, R):
+def image_to_vector(img1, img2, camera_index):
     img2 = image_distort.correct_image(img2, camera_index)
     img1 = image_distort.correct_image(img1, camera_index)
     current_subtracted_frame = cv2.subtract(img1, img2)
     b, g, r = cv2.split(current_subtracted_frame)
     edges_arr = find_edges(b)
-    object_location = border_grouping.find_object_locations(edges_arr, expected_loc, R)
+    object_location = border_grouping.find_object_locations(edges_arr)
     if object_location == (-10000,-10000):
         return None
     centered_location = (object_location - np.array([540, 1920 / 2])) * np.array([-1, 1])

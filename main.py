@@ -34,29 +34,43 @@ if __name__ == '__main__':
     # ]
     #
     #
-    camera_locations = [np.array([0.625,0,0]),np.array([0,0,0]),np.array([-0.68,0,0])]
-    video = cv2.VideoCapture('fulltest2.mp4')
+    camera_locations = [np.array([-4.4,0,0]),np.array([0,5.6,0]),np.array([3.1,0,0])]
+    video = cv2.VideoCapture('dronefootage1.mp4')
     # videos = image_cut.image_cut('fulltest1.mp4', 30, desired_fps)
     locations = []
-    speeds = []
-    avg_speeds = []
-    last_known_location = np.array([0,0,0])
-    expected_error = 200000
-    frame_counter = 0
-    fps_jump = 2 #basic FPS jump
-    video_length = int(video.get(cv2.CAP_PROP_FRAME_COUNT))-1
+    fps_jump = 15 #basic FPS jump
+    frame_counter = 120*30
+    video.set(cv2.CAP_PROP_POS_FRAMES, 120*30)
+    # video_length = int(video.get(cv2.CAP_PROP_FRAME_COUNT))-1
+    #print(video_length)
     prev_frames, video = image_cut.image_cut(video, fps_jump)
-    frame_counter += 2*fps_jump
+    frame_counter+=fps_jump
 
-    while frame_counter < video_length:
+    while fps_jump< 145*30:
         frames, video = image_cut.image_cut(video, fps_jump)
-        frame_counter += fps_jump
+        if frames is None:
+            break
         direction_vectors=[]
-        direction_vectors.append(video_to_vector.image_to_vector(frames[0], prev_frames[0],2))#, video_to_vector.predicted_pixel(predicted_location, camera_angles[2]), expected_error))
-        direction_vectors.append(video_to_vector.image_to_vector(frames[2], prev_frames[2],3))#, video_to_vector.predicted_pixel(predicted_location, camera_angles[3]), expected_error))
-        direction_vectors.append(video_to_vector.image_to_vector(frames[1], prev_frames[1],0))#, video_to_vector.predicted_pixel(predicted_location, camera_angles[0]), expected_error))
-        locations+=(calc_point.find_closest(camera_locations,direction_vectors ))
+        #new_direction_vec, n_pixels1 = video_to_vector.image_to_vector(frames[0], prev_frames[0],2)
+        #direction_vectors.append(new_direction_vec)#, video_to_vector.predicted_pixel(predicted_location, camera_angles[2]), expected_error))
+        new_direction_vec, n_pixels2 = video_to_vector.image_to_vector(frames[2], prev_frames[2],3)
+        direction_vectors.append(new_direction_vec)#, video_to_vector.predicted_pixel(predicted_location, camera_angles[3]), expected_error))
+        new_direction_vec, n_pixels3 = video_to_vector.image_to_vector(frames[1], prev_frames[1],0)
+        direction_vectors.append(new_direction_vec)#, video_to_vector.predicted_pixel(predicted_location, camera_angles[0]), expected_error))
+        new_loc =calc_point.find_closest(camera_locations,direction_vectors )
+        if new_loc is not None and new_loc[0][2]<0:
+            locations+=new_loc
+            if len(locations)>1:
+                xy_speed = find_speed.find_xy_speed(locations[-1], locations[-2], 30/fps_jump)
+                object_pixel_num = max(n_pixels1, n_pixels2, n_pixels3)
+                object_pixel_radius = object_pixel_num/(2*3.14)
+                object_radius = (object_pixel_radius/ 1920)* new_loc[0][2] * math.tan(1.9)
+                fps_jump = int(object_radius * 40 // xy_speed) + 1
+                print(fps_jump)
+            frame_counter += fps_jump
+                # print(f'num frames left{video_length - frame_counter}')
         prev_frames = frames
+
         # if locations[-1] is not None:
         #     last_known_direction = locations[-1] - last_known_location
         #     last_known_direction = last_known_direction / (np.sum(last_known_direction *last_known_direction) ** 0.5)
@@ -69,12 +83,9 @@ if __name__ == '__main__':
         #     expected_error = expected_error * 2
         # predicted_location = last_known_location + last_known_direction * speeds[-1] * counter / desired_fps
         # predicted_locations.append(predicted_location)
-    real_locations = []
-    for location in locations:
-        if location is not None and location[2]<0:
-            real_locations.append(location)
-    print(real_locations)
-    locations = np.array(real_locations)
+
+    print(locations)
+    locations = np.array(locations)
     x_locations = [locations[i][0] for i in range (len(locations))]
     y_locations = [-locations[i][1] for i in range (len(locations))]
     z_locations = [locations[i][2] for i in range (len(locations))]

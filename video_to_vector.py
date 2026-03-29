@@ -29,26 +29,26 @@ def image_to_vector(img1, img2, camera_index):
     current_subtracted_frame = cv2.subtract(img1, img2)
     b, g, r = cv2.split(current_subtracted_frame)
     edges_arr = find_edges(b)
-    object_location = border_grouping.find_object_locations(edges_arr)
+    object_location, n_pixels = border_grouping.find_object_locations(edges_arr)
     if object_location == (-10000,-10000):
-        return None
+        return None , 0
     centered_location = (object_location - np.array([540, 1920 / 2])) * np.array([-1, 1])
     direction_vector = centered_location * 2 / np.array([540, 1920 / 2]) * np.tan(camera_angles[camera_index] / 2)
     direction_vector_3d = [direction_vector[1], direction_vector[0], 1]
-    return direction_vector_3d
+    return direction_vector_3d, n_pixels
 
-
-def find_direction_from_vid(video, camera_index):
-
-    object_locations = image_to_vector(video, camera_index)
-    object_locations_map = np.array([ 1 if a != (0,0) else 0 for a in list(object_locations)])
-    # plt.plot(direction_vector[1], direction_vector[0], 'o')
-    ypoints = [-loc[0] + 540 for loc in object_locations] + [1920 / 2, 1920 / 2, -1920 / 2, -1920 / 2] # np.append(smooth_object_location[1], [1920 / 2, 1920 / 2, -1920 / 2, -1920 / 2])
-    xpoints = [loc[1] - 1920 / 2 for loc in object_locations] + [1080 / 2, 1080 / 2, -1080 / 2, -1080 / 2]# np.append(smooth_object_location[0], [1080 / 2, 1080 / 2, -1080 / 2, -1080 / 2])
-    plt.plot(xpoints, ypoints, 'o')
-    plt.show()
-    direction_vector_3d = np.array([direction_vector_3d[i] if object_locations_map[i] else np.array((-100000,-100000,-100000))for i in range (len(object_locations_map))])
-    return direction_vector_3d
+#
+# def find_direction_from_vid(video, camera_index):
+#
+#     object_locations = image_to_vector(video, camera_index)
+#     object_locations_map = np.array([ 1 if a != (0,0) else 0 for a in list(object_locations)])
+#     # plt.plot(direction_vector[1], direction_vector[0], 'o')
+#     ypoints = [-loc[0] + 540 for loc in object_locations] + [1920 / 2, 1920 / 2, -1920 / 2, -1920 / 2] # np.append(smooth_object_location[1], [1920 / 2, 1920 / 2, -1920 / 2, -1920 / 2])
+#     xpoints = [loc[1] - 1920 / 2 for loc in object_locations] + [1080 / 2, 1080 / 2, -1080 / 2, -1080 / 2]# np.append(smooth_object_location[0], [1080 / 2, 1080 / 2, -1080 / 2, -1080 / 2])
+#     plt.plot(xpoints, ypoints, 'o')
+#     plt.show()
+#     direction_vector_3d = np.array([direction_vector_3d[i] if object_locations_map[i] else np.array((-100000,-100000,-100000))for i in range (len(object_locations_map))])
+#     return direction_vector_3d
 
     # viewing the data
 

@@ -23,7 +23,7 @@ def find_object_locations(img): #finds border with most pixels and returns its a
             for index in object_pixels:
                 img[index]=0
     object_location_vector = (object_location[0],object_location[1])
-    return object_location_vector # (2*object_location_vector[0]/img_size[0], 2*object_location_vector[1]/img_size[1])
+    return object_location_vector, most_pixels # (2*object_location_vector[0]/img_size[0], 2*object_location_vector[1]/img_size[1])
 
 
 def find_object_helper(img, pixel, visited_pixels):

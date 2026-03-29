@@ -8,7 +8,7 @@ def find_closest(O, D):
             D_improved.append(D[i])
     if len(D_improved)<2: #need at least 2 vecs to find aprx location
         print('skipped point')
-        return [None]
+        return None
     D_improved = np.array (D_improved)
     D = [D_improved[i] / np.sum(D_improved[i]*D_improved[i])**0.5 for i in range(len(D_improved))]
     A = sum(np.array([np.identity(3) - np.array([D[i]]) * np.array([D[i]]).T for i in range(len(D))]))

@@ -21,7 +21,8 @@ import cv2
 def image_cut(video, fps_jump):
     for i in range(fps_jump):
         ret, frame = video.read()
-
+    if frame is None:
+        return None, video
     H, W = frame.shape[:2]
     cut_h, cut_w = H // 5, W // 5
     return [frame[:, cut_w*i:cut_w*(i+1)] for i in range(5)], video

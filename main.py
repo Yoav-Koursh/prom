@@ -53,11 +53,11 @@ if __name__ == '__main__':
         if frames is None:
             break
         direction_vectors=[]
-        new_direction_vec, n_pixels1 = video_to_vector.image_to_vector(frames[0], prev_frames[0],1)
+        new_direction_vec, n_pixels1 = video_to_vector.image_to_vector(frames[0], prev_frames[0],1,frames_counter)
         direction_vectors.append(new_direction_vec)#, video_to_vector.predicted_pixel(predicted_location, camera_angles[2]), expected_error))
-        new_direction_vec, n_pixels2 = video_to_vector.image_to_vector(frames[1], prev_frames[1],3)
+        new_direction_vec, n_pixels2 = video_to_vector.image_to_vector(frames[1], prev_frames[1],3, frames_counter)
         direction_vectors.append(new_direction_vec)#, video_to_vector.predicted_pixel(predicted_location, camera_angles[3]), expected_error))
-        new_direction_vec, n_pixels3 = video_to_vector.image_to_vector(frames[2], prev_frames[2],0)
+        new_direction_vec, n_pixels3 = video_to_vector.image_to_vector(frames[2], prev_frames[2],0, frames_counter)
         direction_vectors.append(new_direction_vec)#, video_to_vector.predicted_pixel(predicted_location, camera_angles[0]), expected_error))
         new_loc =calc_point.find_closest(camera_locations,direction_vectors )
         if new_loc is not None and new_loc[0][2]<0:

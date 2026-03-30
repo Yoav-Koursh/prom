@@ -28,12 +28,12 @@ def image_to_vector(img1, img2, camera_index):
     img1 = image_distort.correct_image(img1, camera_index)
     current_subtracted_frame = cv2.subtract(img1, img2)
     b, g, r = cv2.split(current_subtracted_frame)
-    # cv2.imshow('imga', img1)
-    # cv2.imshow('imgb', img2)
-    # cv2.imshow('subtract', current_subtracted_frame)
+    cv2.imshow('imga', img1)
+    cv2.imshow('imgb', img2)
+    cv2.imshow('subtract', current_subtracted_frame)
     edges_arr = find_edges(current_subtracted_frame)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
     object_location, n_pixels = border_grouping.find_object_locations(edges_arr)
     if object_location == (-10000,-10000):

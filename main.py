@@ -6,19 +6,22 @@ import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 
 import calc_point
+import detect_type
 import distancefromline
 import find_speed
 import image_cut
 import moving_avg
+import turn_vectors
 import video_to_vector
 import math
 import matplotlib.pyplot as plt
 desired_fps = 15
-sec_start = 38 # when to start video
-num_secs = 10 # number of seconds of the video the program will use
+sec_start = 42 # when to start video
+num_secs = 0.5 # number of seconds of the video the program will use
 
 basic_expected_error = 1000
 if __name__ == '__main__':
+    speeds=[]
     camera_locations = [np.array([0,-3.4,0]),np.array([-5.6,0 ,0]),np.array([0,2.1,0])]
     n_pixels1, n_pixels2, n_pixels3 = 0 , 0 , 0
     video = cv2.VideoCapture('dronefootage2.mp4') #video file name
@@ -42,6 +45,7 @@ if __name__ == '__main__':
         new_direction_vec, n_pixels1, object1loc = video_to_vector.image_to_vector(frames[0], prev_frames[0],1)
         direction_vectors.append(new_direction_vec)#, video_to_vector.predicted_pixel(predicted_location, camera_angles[2]), expected_error))
         new_direction_vec, n_pixels2, object2loc = video_to_vector.image_to_vector(frames[1], prev_frames[1],3)
+        new_direction_vec = (turn_vectors.turn_vector(new_direction_vec, -0.0872665))
         direction_vectors.append(new_direction_vec)#, video_to_vector.predicted_pixel(predicted_location, camera_angles[3]), expected_error))
         new_direction_vec, n_pixels3, object3loc = video_to_vector.image_to_vector(frames[2], prev_frames[2],0)
         direction_vectors.append(new_direction_vec)#, video_to_vector.predicted_pixel(predicted_location, camera_angles[0]), expected_error))
@@ -57,52 +61,38 @@ if __name__ == '__main__':
 
             if len(locations)>1:
                 xy_speed = find_speed.find_xy_speed(locations[-1], locations[-2], 30/fps_jump)
+                speeds.append(find_speed.find_speed(locations[-1], locations[-2], 30/fps_jump))
                 object_pixel_num = max(n_pixels1, n_pixels2, n_pixels3)
                 object_pixel_radius = object_pixel_num/(2*3.14)
                 object_radius = (object_pixel_radius/ 1920)* new_loc[0][2] * math.tan(1.9)
+                print(f'r {object_radius}, xy {xy_speed}')
                 fps_jump = abs(int(object_radius * 30 // xy_speed)) + 1
                 # print(f'num frames left{video_length - frame_counter}')
 
         frames_counter += fps_jump
         prev_frames = frames
 
-        # if locations[-1] is not None:
-        #     last_known_direction = locations[-1] - last_known_location
-        #     last_known_direction = last_known_direction / (np.sum(last_known_direction *last_known_direction) ** 0.5)
-        #     expected_error = basic_expected_error
-        #     speeds+=find_speed.find_speed(locations[-1], last_known_location, desired_fps/counter)*counter
-        #     last_known_location = locations[-1]
-        #     counter = 1
-        # else:
-        #     counter += 1
-        #     expected_error = expected_error * 2
-        # predicted_location = last_known_location + last_known_direction * speeds[-1] * counter / desired_fps
-        # predicted_locations.append(predicted_location)
-    # x= [object1locs[i][1] for i in range(len(object1locs))]
-    # y= [object1locs[i][0] for i in range(len(object1locs))]
-    # plt.plot(x,y,'o', label = '1')
-    # x= [object2locs[i][1] for i in range(len(object2locs))]
-    # y= [object2locs[i][0] for i in range(len(object2locs))]
-    # plt.plot(x,y,'o', label = '2')
-    # x= [object3locs[i][1] for i in range(len(object3locs))]
-    # y= [object3locs[i][0] for i in range(len(object3locs))]
-    # plt.plot(x,y,'o',  label = '3')
+    x_data = [object1locs[i][1] for i in range(len(object1locs))]
+    y_data = [object1locs[i][0] for i in range(len(object1locs))]
+    plt.plot(x_data,y_data,'o',label= '1')
+    x_data = [object2locs[i][1] for i in range(len(object2locs))]
+    y_data = [object2locs[i][0] for i in range(len(object2locs))]
+    plt.plot(x_data,y_data,'o', label = '2')
+    x_data = [object3locs[i][1] for i in range(len(object2locs))]
+    y_data = [object3locs[i][0] for i in range(len(object2locs))]
+    plt.plot(x_data,y_data,'o', label ="3")
+    plt.legend()
+    plt.show()
 
-    # print(f' camera 1 pixels{object1locs[60]}, camera 2 pixels{object2locs[60]}, camera 3 pixels{object3locs[60]}')
-    # x=[ [object1locs[i][1], object2locs[i][1], object3locs[i][1] ] for i in range(len(object1locs))]
-    # y=[ [object1locs[i][0], object2locs[i][0], object3locs[i][0] ] for i in range(len(object1locs))]
-    # for i in range(len(object1locs)):
-    #     plt.plot(x[i],y[i])
-    #     if i%5 == 0:
-    #         plt.show()
-
-    print(locations)
     locations = np.array(locations)
     x_locations = [locations[i][1] for i in range (len(locations))]
     y_locations = [-locations[i][0] for i in range (len(locations))]
     z_locations = [locations[i][2] for i in range (len(locations))]
     print('real deal')
     print([(float(x_locations[i]), float(y_locations[i]), float(z_locations[i])) for i in range(len(locations))])
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+    print(f' object is {detect_type.detect(speeds, locations)}')
     # print([[f'({camera_locations[i][0]},{camera_locations[i][1]},{camera_locations[i][2]}) + t*({direction_vecs_history[j][i]})' for i in range(2)]for j in range(len(direction_vecs_history))])
     # long_ass_String = '['
     # for i in range(len(direction_vecs_history)):

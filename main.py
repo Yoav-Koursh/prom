@@ -16,10 +16,9 @@ import video_to_vector
 import math
 import matplotlib.pyplot as plt
 desired_fps = 15
-sec_start = 42 # when to start video
-num_secs = 0.5 # number of seconds of the video the program will use
+sec_start = 28 # when to start video
+num_secs = 2 # number of seconds of the video the program will use
 
-basic_expected_error = 1000
 if __name__ == '__main__':
     speeds=[]
     camera_locations = [np.array([0,-3.4,0]),np.array([-5.6,0 ,0]),np.array([0,2.1,0])]
@@ -36,6 +35,7 @@ if __name__ == '__main__':
     object3locs=[]
     direction_vecs_history=[]
     while frames_counter<(num_secs * 30) :
+        print(frames_counter)
         if frames_counter % 10 ==0:
             print('.' ,end='')
         frames, video = image_cut.image_cut(video, fps_jump)
@@ -90,8 +90,6 @@ if __name__ == '__main__':
     z_locations = [locations[i][2] for i in range (len(locations))]
     print('real deal')
     print([(float(x_locations[i]), float(y_locations[i]), float(z_locations[i])) for i in range(len(locations))])
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
     print(f' object is {detect_type.detect(speeds, locations)}')
     # print([[f'({camera_locations[i][0]},{camera_locations[i][1]},{camera_locations[i][2]}) + t*({direction_vecs_history[j][i]})' for i in range(2)]for j in range(len(direction_vecs_history))])
     # long_ass_String = '['

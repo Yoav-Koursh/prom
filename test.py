@@ -40,7 +40,7 @@ if __name__ == '__main__':
     # videos = image_cut.image_cut('fulltest1.mp4', 30, desired_fps)
     locations = np.array([[0,1920/2], [0,0],[0,-1920/2]])
     direction_vectors=[]
-    for i in range(3):
+    for i in range(2):
         centered_location = locations[i]
         direction_vector = centered_location / np.array([540, 1920 / 2]) * np.tan(math.pi / 4)
         direction_vector_3d = [direction_vector[0], direction_vector[1], 1]

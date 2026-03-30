@@ -43,7 +43,7 @@ def image_to_vector(img1, img2, camera_index):
     direction_vector_3d = [direction_vector[0], direction_vector[1], 1]
     direction_vector_3d = np.array(direction_vector_3d)
     direction_vector_3d = direction_vector_3d / (np.sum(direction_vector_3d*direction_vector_3d))**0.5
-    print(direction_vector_3d)
+    # print(direction_vector_3d)
     return direction_vector_3d, n_pixels, object_location
 
 #

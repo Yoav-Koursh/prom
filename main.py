@@ -17,7 +17,7 @@ import math
 import matplotlib.pyplot as plt
 desired_fps = 15
 sec_start = 28 # when to start video
-num_secs = 5 # number of seconds of the video the program will use
+num_secs = 15 # number of seconds of the video the program will use
 
 camera_angles = np.array([(1.1781, 2.0944), (0.7875, 1.4), (0.7242, 1.3676), (0.93265875, 1.65806), (0.488, 0.6342)])
 
@@ -52,16 +52,16 @@ if __name__ == '__main__':
 
         direction_vectors=[]
 
-        new_direction_vec, n_pixels1, object1loc = video_to_vector.image_to_vector(frames[0], prev_frames[0],1)
+        new_direction_vec, n_pixels1, object1loc = video_to_vector.image_to_vector(frames[0], prev_frames[0],0)
         direction_vectors.append(new_direction_vec)#, video_to_vector.predicted_pixel(predicted_location, camera_angles[2]), expected_error))
         object1locs.append(object1loc)
 
-        new_direction_vec, n_pixels2, object2loc = video_to_vector.image_to_vector(frames[1], prev_frames[1],3)
+        new_direction_vec, n_pixels2, object2loc = video_to_vector.image_to_vector(frames[1], prev_frames[1],1)
         # new_direction_vec = (turn_vectors.turn_vector(new_direction_vec, -0.0872665))
         direction_vectors.append(new_direction_vec)#, video_to_vector.predicted_pixel(predicted_location, camera_angles[3]), expected_error))
         object2locs.append(object2loc)
 
-        new_direction_vec, n_pixels3, object3loc = video_to_vector.image_to_vector(frames[2], prev_frames[2],0)
+        new_direction_vec, n_pixels3, object3loc = video_to_vector.image_to_vector(frames[2], prev_frames[2],2)
         direction_vectors.append(new_direction_vec)#, video_to_vector.predicted_pixel(predicted_location, camera_angles[0]), expected_error))
         object3locs.append(object3loc)
 
@@ -96,7 +96,7 @@ if __name__ == '__main__':
         prev_frames = frames
     print(len(direction_vecs_history))
     print(len(locations))
-    print(f' frame 6 {direction_vecs_history[4]}')
+    #print(f' frame 6 {direction_vecs_history[4]}')
     x_data_1 = [object1locs[i][1] for i in range(len(object1locs))]
     y_data_1 = [object1locs[i][0] for i in range(len(object1locs))]
     plt.plot(x_data_1,y_data_1,'o',label= '1')
@@ -115,7 +115,7 @@ if __name__ == '__main__':
     plt.show()
 
 
-    best_vecs = np.array([[1,0,0],[0,1,0]])
+    """best_vecs = np.array([[1,0,0],[0,1,0]])
     best_res = math.inf
 
     print("starting the big boy")
@@ -184,7 +184,7 @@ if __name__ == '__main__':
                                             best_vecs = np.array([[u_hat_1, v_hat_1], [u_hat_2, v_hat_2], [u_hat_3, v_hat_3]])
 
 
-    print(f'best vecs{best_vecs}')
+    print(f'best vecs{best_vecs}')"""
     locations = np.array(locations)
     x_locations = [locations[i][1] for i in range (len(locations))]
     y_locations = [-locations[i][0] for i in range (len(locations))]

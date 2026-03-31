@@ -53,3 +53,12 @@
 
 import numpy as np
 
+
+def real_img_to_vec(frame_loc, u, v, camera_angles):
+    real_x = (frame_loc[0] - 1920 / 2) / (1920 / 2) * np.tan(camera_angles[1] / 2)
+    real_y = (frame_loc[1] - 1080 / 2) / (1080 / 2) * np.tan(camera_angles[0] / 2)
+    x_vec_2 = u * real_x
+    y_vec_2 = v * real_y
+    D = x_vec_2 + y_vec_2 + np.cross(u, v)
+
+    return D

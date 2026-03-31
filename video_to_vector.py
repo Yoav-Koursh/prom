@@ -7,12 +7,13 @@ from matplotlib.pyplot import imshow
 import border_grouping
 import image_distort
 import matplotlib.pyplot as plt
+import test
 
 import moving_avg
 
-# camera_angles = np.array([(1,1.9 ),(0.7549, 1.2042 ), (0.7242,1.3676), (0.7927, 1.48827),(0.488, 0.6342)])  #reinforced, HP, red, lenovo, basic
-camera_angles = np.array([(1.1781, 2.0944), (0.7875, 1.4), (0.7242, 1.3676), (0.93265875, 1.65806), (0.488, 0.6342)])
-
+# camera_angles = np.array([(1,1.9 ),(0.7549, 1.2042 ), (0.7242,1.3676), (0.7927, 1.48827),(0.488, 0.6342)])  #reinforced, HP, lenovo, red, basic
+camera_angles = np.array([(0.7875, 1.4), (0.93265875, 1.65806), (1.1781, 2.0944), (0.7242, 1.3676), (0.488, 0.6342)])
+camera_vectors = np.array([[[[0.198, -0.594, 0.7797179]], [[-0.99, -0.33373522, 0.92163811]]], [[[0.198, -0.594, 0.7797179]], [[-0.99, -0.33373522, 0.92163811]]], [[[0.594, -0.99, 0.54252005]], [[0.594, -0.53746345, 0.59857918]]]]) # HP LENOVO REIN
 
 def find_edges(img):
     thresh = 30
@@ -36,8 +37,8 @@ def image_to_vector(img1, img2, camera_index):
     if object_location == (-10000,-10000):
         return None , 0, (0,0)
     centered_location = (object_location - np.array([540, 1920 / 2])) * np.array([-1, 1])
-    direction_vector = centered_location  / np.array([540, 1920 / 2]) * np.tan(camera_angles[camera_index] / 2)
-    direction_vector_3d = [direction_vector[0], direction_vector[1], 1]
+    # direction_vector = centered_location  / np.array([540, 1920 / 2]) * np.tan(camera_angles[camera_index] / 2)
+    direction_vector_3d = test.real_img_to_vec(centered_location, camera_vectors[camera_index][0], camera_vectors[camera_index][1], camera_angles[camera_index])# [direction_vector[0], direction_vector[1], 1]
     direction_vector_3d = np.array(direction_vector_3d)
     direction_vector_3d = direction_vector_3d / (np.sum(direction_vector_3d*direction_vector_3d))**0.5
     # print(direction_vector_3d)

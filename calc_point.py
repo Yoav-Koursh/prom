@@ -1,57 +1,73 @@
 import numpy as np
-import matplotlib.pyplot as plt
+
 
 def find_closest(O, D):
-    D_improved = []
-    for i in range (len(D)): #check if code found object in the frame
-        if D[i] is not None:
-            D_improved.append(D[i])
-    if len(D_improved) < 2: #need at least 2 vecs to find aprx location
+    # 1. Filter out None values from BOTH O and D so indices match
+    valid_indices = [i for i, d in enumerate(D) if d is not None]
+
+    if len(valid_indices) < 2:
         return None
-    D_improved = np.array (D_improved)
-    D = [D_improved[i] / np.sum(D_improved[i]*D_improved[i])**0.5 for i in range(len(D_improved))]
-    A = sum(np.array([np.identity(3) - np.array([D[i]]) * np.array([D[i]]).T for i in range(len(D))]))
-    b = sum(np.array([np.matmul((np.identity(3) - np.array([D[i]]) * np.array([D[i]]).T), np.array([O[i]]).T) for i in range(len(D))]))
 
-    A_inv = np.linalg.inv(A)
+    # Filtered arrays
+    O_filt = np.array([O[i] for i in valid_indices])
+    D_filt = np.array([D[i] for i in valid_indices])
 
-    return np.array(list(np.matmul(A_inv, b).T))
+    # 2. Normalize directions (with safety epsilon to avoid divide by zero)
+    # This prevents the sqrt/NaN issues
+    norms = np.linalg.norm(D_filt, axis=1, keepdims=True)
+    D_norm = D_filt / (norms + 1e-9)
 
+    # 3. Build A and b using the least squares intersection of lines formula
+    # Formula: A = sum(I - d*d.T), b = sum((I - d*d.T) * o)
+    I = np.identity(3)
+    A = np.zeros((3, 3))
+    b = np.zeros(3)
 
-#def best_distance(O, D):
-#    return sum([np.linalg.norm(np.matmul(np.identity(3) - np.matmul(D[i],D[i].T), find_closest(O, D) - O[i].T)) ** 2 for i in range(len(D))])
+    for i in range(len(D_norm)):
+        # .flatten() ensures the shape is (3,) exactly
+        d = D_norm[i].flatten()
+        o = O_filt[i].flatten()
 
+        # Projection matrix: (I - d*d.T)
+        # np.outer(d, d) correctly creates the 3x3 matrix
+        proj = I - np.outer(d, d)
 
-# def L(x, origins, directions):
-#     """
-#     Compute:
-#         L(x) = sum_i ||(I - d_i d_i^T)(x - o_i)||^2
-#
-#     Parameters:
-#     - x: shape (3,)
-#     - origins: list/array of shape (n,3)
-#     - directions: list/array of shape (n,3)
-#     """
-#     x = np.asarray(x, dtype=float)
-#     origins = np.asarray(origins, dtype=float)
-#     directions = np.asarray(directions, dtype=float)
-#
-#     total = 0.0
-#     for o, d in zip(origins, directions):
-#         total += point_to_line_squared_distance(x, o, d)
-#     return total
+        A += proj
+        b += proj @ o  # '@' is the shorthand for np.matmul
+
+    # 4. Solve Ax = b
+    try:
+        x = np.linalg.solve(A, b)
+        return x
+    except np.linalg.LinAlgError:
+        # In case A is singular (lines are all parallel)
+        return None
+
 
 def compute_projected_distance_sum(d, o, x):
+    """
+    Computes the sum of squared distances from point x to the lines
+    defined by origins o and directions d.
+    """
+    if x is None: return np.inf
+
     d = np.asarray(d)
     o = np.asarray(o)
     x = np.asarray(x)
 
+    # Ensure d is normalized
+    d_norms = np.linalg.norm(d, axis=1, keepdims=True)
+    d = d / (d_norms + 1e-9)
+
+    # Vector from origin to point x
     diff = x - o
-    d_outer = d[:, :, np.newaxis] @ d[:, np.newaxis, :]
-    I_3 = np.eye(3)
-    projection_matrices = I_3 - d_outer
-    projected = projection_matrices @ diff[:, :, np.newaxis]
-    squared_norms = np.sum(projected ** 2, axis=(1, 2))
-    total_sum = np.sum(squared_norms)
+
+    # Distance from point to line: ||(x - o) - ((x - o)·d)d||^2
+    # Which is the same as: || (I - d*d.T) * (x - o) ||^2
+    total_sum = 0
+    for i in range(len(d)):
+        proj_matrix = np.identity(3) - np.outer(d[i], d[i])
+        dist_vec = proj_matrix @ diff[i]
+        total_sum += np.sum(dist_vec ** 2)
 
     return float(total_sum)

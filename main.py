@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
     video = cv2.VideoCapture('dronefootage2.mp4') #video file name
     video.set(cv2.CAP_PROP_POS_FRAMES, 38 * sec_start)
-    fps_jump = 10 #basic FPS jump
+    fps_jump = 2 #basic FPS jump
     frames_counter = 0
 
     locations = []
@@ -77,23 +77,26 @@ if __name__ == '__main__':
 
 
         if new_loc is not None and not check:# and new_loc[0][2]<0:
-            locations.append(new_loc[0] * np.array([-1,1,-1]))
-            # if direction_vectors[0] is not None and direction_vectors[1] is not None and direction_vectors[2] is not None:
-            #     direction_vecs_history.append(direction_vectors)
+            if direction_vectors[0] is not None and direction_vectors[1] is not None and direction_vectors[2] is not None:
+                locations.append(new_loc[0] * np.array([-1, 1, -1]))
+                direction_vecs_history.append(direction_vectors)
+
 
             if len(locations)>1:
                 xy_speed = find_speed.find_xy_speed(locations[-1], locations[-2], 30/fps_jump)
                 speeds.append(find_speed.find_speed(locations[-1], locations[-2], 30/fps_jump))
                 object_pixel_num = max(n_pixels1, n_pixels2, n_pixels3)
                 object_pixel_radius = object_pixel_num/(2*3.14)
-                object_radius = (object_pixel_radius/ 1920)* new_loc[0][2] * math.tan(1.9)
+                object_radius = (object_pixel_radius/ 1920)* new_loc[2] * math.tan(1.9)
                 # print(f'r {object_radius}, xy {xy_speed}')
                 fps_jump = abs(int(object_radius * 30 // xy_speed)) + 1
                 # print(f'num frames left{video_length - frame_counter}')
 
         frames_counter += fps_jump
         prev_frames = frames
-
+    print(len(direction_vecs_history))
+    print(len(locations))
+    print(f' frame 6 {direction_vecs_history[4]}')
     x_data_1 = [object1locs[i][1] for i in range(len(object1locs))]
     y_data_1 = [object1locs[i][0] for i in range(len(object1locs))]
     plt.plot(x_data_1,y_data_1,'o',label= '1')
@@ -116,11 +119,11 @@ if __name__ == '__main__':
     best_res = math.inf
 
     print("starting the big boy")
-    for a in np.linspace(-1,1,6):
+    for a in np.linspace(-0.99,0.99,6):
         print("a = " + str(a))
-        for b in np.linspace(-1, 1, 6):
+        for b in np.linspace(-0.99, 0.99, 6):
             print("b = " + str(b))
-            for c in np.linspace(-1, 1, 6):
+            for c in np.linspace(-0.99, 0.99, 6):
                 print("c = " + str(c))
                 cam_1_y_v = (a * b * c + np.sqrt(a ** 2 * b ** 2 * c ** 2 - (a ** 2) * (1 - a ** 2 - b **2 - c ** 2 - b ** 2 * c ** 2))) / (a ** 2 - 1)
                 cam_1_z_u = np.sqrt(1 - a ** 2 - b **2)
@@ -129,9 +132,9 @@ if __name__ == '__main__':
                 u_hat_1 = np.array([[a, b, cam_1_z_u]])
                 v_hat_1 = np.array([[c, cam_1_y_v, cam_1_z_v]])
                 origin_1 = np.cross(u_hat_1, v_hat_1)
-                for d in np.linspace(-1, 1, 6):
-                    for e in np.linspace(-1, 1, 6):
-                        for f in np.linspace(-1, 1, 6):
+                for d in np.linspace(-0.99, 0.99, 6):
+                    for e in np.linspace(-0.99, 0.99, 6):
+                        for f in np.linspace(-0.99, 0.99, 6):
                             cam_2_y_v = (d * e * f + np.sqrt(d ** 2 * e ** 2 * f ** 2 - (d ** 2) * (
                                         1 - d ** 2 - e ** 2 - f ** 2 - e ** 2 * f ** 2))) / (d ** 2 - 1)
                             cam_2_z_u = np.sqrt(1 - d ** 2 - e ** 2)
@@ -140,9 +143,9 @@ if __name__ == '__main__':
                             u_hat_2 = np.array([[d, e, cam_2_z_u]])
                             v_hat_2 = np.array([[f, cam_2_y_v, cam_2_z_v]])
                             origin_2 = np.cross(u_hat_2, v_hat_2)
-                            for g in np.linspace(-1, 1, 6):
-                                for h in np.linspace(-1, 1, 6):
-                                    for i in np.linspace(-1, 1, 6):
+                            for g in np.linspace(-0.99, 0.99, 6):
+                                for h in np.linspace(-0.99, 0.99, 6):
+                                    for i in np.linspace(-0.99, 0.99, 6):
                                         cam_3_y_v = (g * i * c + np.sqrt(g ** 2 * i ** 2 * c ** 2 - (g ** 2) * (
                                                 1 - g ** 2 - i ** 2 - c ** 2 - i ** 2 * c ** 2))) / (g ** 2 - 1)
                                         cam_3_z_u = np.sqrt(1 - g ** 2 - i ** 2)
@@ -153,22 +156,22 @@ if __name__ == '__main__':
 
                                         origin_3 = np.cross(u_hat_3, v_hat_3)
 
-                                        real_x_1 = (x_data_1[40] - 1920 / 2) / (1920 / 2) * np.tan(camera_angles[1][1] / 2)
-                                        real_y_1 = (y_data_1[40] - 1080 / 2) / (1080 / 2) * np.tan(camera_angles[1][0] / 2)
+                                        real_x_1 = (x_data_1[4] - 1920 / 2) / (1920 / 2) * np.tan(camera_angles[1][1] / 2)
+                                        real_y_1 = (y_data_1[4] - 1080 / 2) / (1080 / 2) * np.tan(camera_angles[1][0] / 2)
                                         x_vec_1 = u_hat_1 * real_x_1
                                         y_vec_1 = v_hat_1 * real_y_1
                                         D_1 = x_vec_1 + y_vec_1 + origin_1
 
 
-                                        real_x_2 = (x_data_2[40] - 1920 / 2) / (1920 / 2) * np.tan(camera_angles[3][1] / 2)
-                                        real_y_2 = (y_data_2[40] - 1080 / 2) / (1080 / 2) * np.tan(camera_angles[3][0] / 2)
+                                        real_x_2 = (x_data_2[4] - 1920 / 2) / (1920 / 2) * np.tan(camera_angles[3][1] / 2)
+                                        real_y_2 = (y_data_2[4] - 1080 / 2) / (1080 / 2) * np.tan(camera_angles[3][0] / 2)
                                         x_vec_2 = u_hat_2 * real_x_2
                                         y_vec_2 = v_hat_2 * real_y_2
                                         D_2 = x_vec_2 + y_vec_2 + origin_2
 
 
-                                        real_x_3 = (x_data_3[40] - 1920 / 2) / (1920 / 2) * np.tan(camera_angles[0][1] / 2)
-                                        real_y_3 = (y_data_3[40] - 1080 / 2) / (1080 / 2) * np.tan(camera_angles[0][0] / 2)
+                                        real_x_3 = (x_data_3[4] - 1920 / 2) / (1920 / 2) * np.tan(camera_angles[0][1] / 2)
+                                        real_y_3 = (y_data_3[4] - 1080 / 2) / (1080 / 2) * np.tan(camera_angles[0][0] / 2)
                                         x_vec_3 = u_hat_3 * real_x_3
                                         y_vec_3 = v_hat_3 * real_y_3
                                         D_3 = x_vec_3 + y_vec_3 + origin_3
@@ -181,11 +184,7 @@ if __name__ == '__main__':
                                             best_vecs = np.array([[u_hat_1, v_hat_1], [u_hat_2, v_hat_2], [u_hat_3, v_hat_3]])
 
 
-
-
-
-
-
+    print(f'best vecs{best_vecs}')
     locations = np.array(locations)
     x_locations = [locations[i][1] for i in range (len(locations))]
     y_locations = [-locations[i][0] for i in range (len(locations))]

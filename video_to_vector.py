@@ -29,7 +29,7 @@ def image_to_vector(img1, img2, camera_index):
     current_subtracted_frame = cv2.subtract(img1, img2)
     b, g, r = cv2.split(current_subtracted_frame)
     edges_arr = find_edges(current_subtracted_frame)
-    print('frame')
+    #print('frame')
 
 
     object_location, n_pixels = border_grouping.find_object_locations(edges_arr)
